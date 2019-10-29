@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\User\UserRepository")
  * @ORM\Table(name="users")
  */
 class User implements UserInterface
@@ -33,6 +33,25 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @var string The status user
+     * @ORM\Column(type="string")
+     */
+    private $status = "new";
+
+    /**
+     * @var \DateTime $created_at
+     * @ORM\Column(type="datetime")
+     */
+    private $created_at;
+
+    /**
+     * @var \DateTime $updated_at
+     * @ORM\Column(type="datetime")
+     */
+    private $updated_at;
+
 
     public function getId(): ?int
     {
@@ -69,6 +88,10 @@ class User implements UserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_WORKER';
+        $roles[] = 'ROLE_MODERATOR';
+        $roles[] = 'ROLE_ADMIN';
+        $roles[] = 'ROLE_SUPER_ADMIN';
 
         return array_unique($roles);
     }
@@ -94,6 +117,36 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getStatus(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * Gets triggered only on insert
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created_at = new \DateTime("now");
+    }
+
+    /**
+     * Gets triggered every time on update
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated_at = new \DateTime("now");
+    }
+
 
     /**
      * @see UserInterface
