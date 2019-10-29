@@ -1,49 +1,31 @@
-{% extends 'base.html.twig' %}
+{% extends 'layouts/login-base.html.twig' %}
 
 {% block title %}Log in{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card-group">
-                    <div class="card p-4">
-                        <div class="card-body">
-                            <h1>Log In</h1>
-                            {% if error %}
-                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                            {% endif %}
-                            <form method="post">
-                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="icon-envelope"></i></span>
-                                    </div>
-                                    <input class="form-control" type="email" name="email" value="{{ last_username }}" placeholder="Email" />
-                                </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="icon-lock"></i></span>
-                                    </div>
-                                    <input class="form-control" type="password" name="password" placeholder="Password" />
-                                </div>
-                                <div class="form-group">
-                                    <div class="checkbox mb-3">
-                                        <label>
-                                            <input type="checkbox" name="_remember_me"> <span class="text-muted">Remember me</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <button class="btn btn-primary px-4" type="submit">Login</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+    <div class="login_block">
+        <h2>Sign In</h2>
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" name="email" value="{{ last_username }}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
+            </div>
+            <div class="form-group">
+                <div class="checkbox mb-3">
+                    <label>
+                        <input type="checkbox" name="_remember_me"> <span class="text-muted">Remember me</span>
+                    </label>
                 </div>
             </div>
-        </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
 {% endblock %}

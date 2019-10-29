@@ -20,7 +20,7 @@ class HomeController extends AbstractController
      */
     public function home(): Response
     {
-        return new Response("Home!");
+        return $this->render('admin/home.html.twig');
     }
 
     /**

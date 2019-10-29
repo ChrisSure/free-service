@@ -1,0 +1,75 @@
+/* Reset */
+.btn-primary {
+    background-color: #09c;
+    border-color: #09c;
+}
+.btn-primary:hover {
+    background-color: #00aae2;
+    border-color: #09c;
+}
+/* Reset */
+
+
+
+/* Login */
+.logo {
+    font-size: 70px;
+    font-weight: bold;
+    color: #09c;
+    text-align: center;
+    margin-top: 50px;
+}
+.logo span {
+    color: #444;
+}
+.login_block {
+    width: 450px;
+    border: 2px solid #09c;
+    border-radius: 6px;
+    margin: 0 auto;
+    margin-top: 40px;
+    padding: 20px;
+}
+.login_block h2 {
+    text-align: center;
+    font-size: 40px;
+    color: #444;
+    margin-bottom: 20px;
+}
+.login_block .btn-primary {
+    background-color: #09c;
+    border-color: #09c;
+}
+/* Login */
+
+/* Admin Panel */
+.admin_panel {
+    border-bottom: 2px solid #09c;
+    padding: 10px 40px;
+    margin-bottom: 40px;
+}
+.admin_panel .logo-admin-panel {
+    font-size: 30px;
+    font-weight: bold;
+    color: #09c;
+}
+.admin_panel .logo-admin-panel span {
+    color: #444;
+}
+.admin_panel .btn {
+    float: right;
+
+}
+.list-group-item.active {
+    background-color: #09c;
+}
+.card {
+    margin-top: 30px;
+}
+.card:first-child {
+    margin-top: 0px;
+}
+.seller_info {
+    padding-left: 20px;
+}
+/* Admin Panel */
