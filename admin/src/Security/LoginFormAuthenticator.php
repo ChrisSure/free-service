@@ -68,7 +68,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('You have entered missed email or password.');
         }
 
         return $user;
@@ -76,7 +76,14 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        if (!$this->passwordEncoder->isPasswordValid($user, $credentials['password'])) {
+            throw new CustomUserMessageAuthenticationException('You have entered missed email or password.');
+        }
+
+        if ($user->getStatus() != 'active') {
+            throw new CustomUserMessageAuthenticationException('User isn\'t active.');
+        }
+        return true;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

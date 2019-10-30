@@ -88,10 +88,6 @@ class User implements UserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-        $roles[] = 'ROLE_WORKER';
-        $roles[] = 'ROLE_MODERATOR';
-        $roles[] = 'ROLE_ADMIN';
-        $roles[] = 'ROLE_SUPER_ADMIN';
 
         return array_unique($roles);
     }
@@ -120,7 +116,7 @@ class User implements UserInterface
 
     public function getStatus(): ?string
     {
-        return $this->email;
+        return $this->status;
     }
 
     public function setStatus(string $status): self
