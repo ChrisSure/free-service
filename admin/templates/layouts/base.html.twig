@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 p-0">
+            <header class="admin_panel">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h1 class="logo-admin-panel">Free<span>Service</span></h1>
+                    </div>
+                    <div class="col-sm-7">
+                        <h3>Hello Taras</h3>
+                    </div>
+                    <div class="col-sm-2">
+                        <a href="{{ path('app_logout') }}"  class="btn btn-danger">Log out</a>
+                    </div>
+            </header>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="list-group ml-4">
+                <a href="#" class="list-group-item list-group-item-action">My Profile</a>
+                <a href="#" class="list-group-item list-group-item-action">My statistics</a>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+</body>
+</html>

@@ -8,3 +8,8 @@ docker-down:
 	docker-compose down --remove-orphans
 docker-build:
 	docker-compose build
+
+yarn-compile:
+	yarn encore dev
+yarn-watch:
+	yarn encore dev --watch
