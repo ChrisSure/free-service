@@ -9,10 +9,17 @@
 namespace App\Service\Auth;
 
 use App\Entity\User\User;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
 class AuthService
 {
+    private $encoder;
+
+    public function __construct(UserPasswordEncoderInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
 
     /**
      * Generate string token
@@ -32,6 +39,17 @@ class AuthService
     public function sendCheckRegistration(User $user, $token)
     {
 
+    }
+
+    /**
+     * Hash password
+     * @param User $user
+     * @param string $password
+     * @return string
+     */
+    public function hashPassword(User $user, $password): string
+    {
+        return $this->encoder->encodePassword($user, $password);
     }
 
 }

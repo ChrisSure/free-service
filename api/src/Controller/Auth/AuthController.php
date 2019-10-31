@@ -12,8 +12,6 @@ use App\Entity\User\User;
 use App\Service\Auth\AuthService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,16 +36,15 @@ class AuthController extends AbstractController
      * @param UserInterface $userManager
      * @return JsonResponse
      */
-    public function register(Request $request, UserPasswordEncoderInterface $encoder, ValidatorInterface $validator)
+    public function register(Request $request, ValidatorInterface $validator)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $user = new User();
-        $password = $encoder->encodePassword($user, $request->get('password'));
         $token = $this->service->generateToken();
 
         $user
             ->setEmail($request->get('email'))
-            ->setPassword($password)
+            ->setPassword($this->service->hashPassword($user, $request->get('password')))
             ->setRoles(($request->get('role') == 'worker') ? ['ROLE_WORKER'] : ['ROLE_USER'])
             ->setStatus('new')
             ->setToken($token)
