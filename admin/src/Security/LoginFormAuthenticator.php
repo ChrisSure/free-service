@@ -83,6 +83,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         if ($user->getStatus() != 'active') {
             throw new CustomUserMessageAuthenticationException('User isn\'t active.');
         }
+
+        if ($user->getRoles()[0] != 'ROLE_MODERATOR' && $user->getRoles()[0] != 'ROLE_ADMIN' && $user->getRoles()[0] != 'ROLE_SUPER_ADMIN') {
+            throw new CustomUserMessageAuthenticationException('Your role isn\'t enought in order to enter admin panel.');
+        }
         return true;
     }
 
