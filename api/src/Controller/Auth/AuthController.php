@@ -8,12 +8,12 @@
 
 namespace App\Controller\Auth;
 
-use App\Entity\User\User;
 use App\Service\Auth\AuthService;
+use App\Service\User\UserService;
+use App\Validation\Auth\RegisterValidation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -23,46 +23,59 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class AuthController extends AbstractController
 {
-    private $service;
+    private $authService;
+    private $userService;
 
-    public function __construct(AuthService $service)
+    public function __construct(AuthService $authService, UserService $userService)
     {
-        $this->service = $service;
+        $this->authService = $authService;
+        $this->userService = $userService;
     }
 
     /**
+     * Register user (worker | user)
      * @Route("/register", name="auth_register",  methods={"POST"})
      * @param Request $request
-     * @param UserInterface $userManager
+     * @param ValidatorInterface $validator
      * @return JsonResponse
      */
     public function register(Request $request, ValidatorInterface $validator)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $user = new User();
-        $token = $this->service->generateToken();
+        $data = [
+            'email' => $request->get('email'),
+            'password' => $request->get('password'),
+            'role' => $request->get('role')
+        ];
 
-        $user
-            ->setEmail($request->get('email'))
-            ->setPassword($this->service->hashPassword($user, $request->get('password')))
-            ->setRoles(($request->get('role') == 'worker') ? ['ROLE_WORKER'] : ['ROLE_USER'])
-            ->setStatus('new')
-            ->setToken($token)
-            ->onPrePersist()->onPreUpdate();
-
-        $errors = $validator->validate($user);
-        if (count($errors) > 0) {
-            return new JsonResponse(["error" => (string)$errors], 500);
+        $violations = (new RegisterValidation())->validate($data);
+        if ($violations->count() > 0) {
+            return new JsonResponse(["error" => (string)$violations], 500);
         }
 
         try {
-            $entityManager->persist($user);
-            $entityManager->flush();
-            $this->service->sendCheckRegistration($user, $token);
+            $this->authService->registerUser($data);
             return new JsonResponse("You successfull registered, check your email for the next step.");
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }
-
     }
+
+    /**
+     * Confirm user email
+     * @Route("/confirm", name="auth_confirm",  methods={"GET"})
+     * @param Request $request
+     * @param ValidatorInterface $validator
+     * @return JsonResponse
+     */
+    public function confirm(Request $request, ValidatorInterface $validator)
+    {
+        $user = $this->userService->getUserByTokenId($request->get('id'), $request->get('token'));
+        if (!$user) {
+            return new JsonResponse("You have missed token.");
+        } else {
+            $this->userService->changeUserActiveStatus($request->get('id'));
+            return new JsonResponse("Congratulation. You can log in.");
+        }
+    }
+
 }
