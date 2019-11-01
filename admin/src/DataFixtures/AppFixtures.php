@@ -22,9 +22,9 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        $this->garantedFillUserData();
 
-        // Create Users All
-        for ($i = 1; $i < 20; $i++) {
+        for ($i = 5; $i < 20; $i++) {
             // Create Users
             $user = new User();
             $user->setEmail('user'.$i. '@gmail.com');
@@ -69,6 +69,50 @@ class AppFixtures extends Fixture
         // Create Users All
 
         $manager->flush();
+    }
+
+    public function garantedFillUserData(ObjectManager $manager)
+    {
+        // Super Admin
+        $user1 = new User();
+        $user1->setEmail('super@gmail.com');
+        $user1->setStatus('active');
+        $password = $this->encoder->encodePassword($user1, '123');
+        $user1->setPassword($password);
+        $user1->setRoles(['ROLE_SUPER_ADMIN']);
+        $user1->onPrePersist();
+        $user1->onPreUpdate();
+        $manager->persist($user1);
+        // User
+        $user2 = new User();
+        $user2->setEmail('user@gmail.com');
+        $user2->setStatus('active');
+        $password = $this->encoder->encodePassword($user2, '123');
+        $user2->setPassword($password);
+        $user2->setRoles(['ROLE_USER']);
+        $user2->onPrePersist();
+        $user2->onPreUpdate();
+        $manager->persist($user2);
+        // Worker
+        $user3 = new User();
+        $user3->setEmail('worker@gmail.com');
+        $user3->setStatus('active');
+        $password = $this->encoder->encodePassword($user3, '123');
+        $user3->setPassword($password);
+        $user3->setRoles(['ROLE_WORKER']);
+        $user3->onPrePersist();
+        $user3->onPreUpdate();
+        $manager->persist($user3);
+        // Moderator
+        $user4 = new User();
+        $user4->setEmail('moderator@gmail.com');
+        $user4->setStatus('active');
+        $password = $this->encoder->encodePassword($user4, '123');
+        $user4->setPassword($password);
+        $user4->setRoles(['ROLE_MODERATOR']);
+        $user4->onPrePersist();
+        $user4->onPreUpdate();
+        $manager->persist($user4);
     }
 
 }
