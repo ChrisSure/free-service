@@ -22,7 +22,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $this->garantedFillUserData();
+        $this->garantedFillUserData($manager);
 
         for ($i = 5; $i < 20; $i++) {
             // Create Users
@@ -113,6 +113,8 @@ class AppFixtures extends Fixture
         $user4->onPrePersist();
         $user4->onPreUpdate();
         $manager->persist($user4);
+
+        $manager->flush();
     }
 
 }
