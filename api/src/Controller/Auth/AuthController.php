@@ -43,8 +43,7 @@ class AuthController extends AbstractController
     {
         $data = [
             'email' => $request->get('email'),
-            'password' => $request->get('password'),
-            'role' => $request->get('role')
+            'password' => $request->get('password')
         ];
 
         $violations = (new RegisterValidation())->validate($data);

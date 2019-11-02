@@ -16,6 +16,6 @@ yarn-watch:
 
 
 ### docker-compose run --rm admin-php-fpm
-### php bin/console make:migration
-### php bin/console doctrine:migrations:migrate
-### php bin/console doctrine:fixtures:load
+### docker-compose run --rm admin-php-fpm php bin/console make:migration
+### docker-compose run --rm admin-php-fpm php bin/console doctrine:migrations:migrate
+### docker-compose run --rm admin-php-fpm php bin/console doctrine:fixtures:load

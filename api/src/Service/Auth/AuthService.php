@@ -9,20 +9,22 @@
 namespace App\Service\Auth;
 
 use App\Entity\User\User;
-use App\Service\AbstractService;
+use App\Repository\User\UserRepository;
 use App\Service\Email\MailService;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
-class AuthService extends AbstractService
+class AuthService
 {
     private $encoder;
     private $mailService;
+    private $userRepository;
 
-    public function __construct(UserPasswordEncoderInterface $encoder, MailService $mailService)
+    public function __construct(UserPasswordEncoderInterface $encoder, MailService $mailService, UserRepository $userRepository)
     {
         $this->encoder = $encoder;
         $this->mailService = $mailService;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -32,19 +34,16 @@ class AuthService extends AbstractService
      */
     public function registerUser(array $data): void
     {
-        $entityManager = $this->getDoctrine()->getManager();
         $user = new User();
         $token = $this->generateToken();
         $user
             ->setEmail($data['email'])
             ->setPassword($this->hashPassword($user, $data['password']))
-            ->setRoles(($data['role'] == 'worker') ? ['ROLE_WORKER'] : ['ROLE_USER'])
+            ->setRoles(['ROLE_USER'])
             ->setStatus('new')
             ->setToken($token)
             ->onPrePersist()->onPreUpdate();
-        $entityManager->persist($user);
-        $entityManager->flush();
-
+        $this->userRepository->save($user);
         $this->mailService->sendCheckRegistration($user, $token);
     }
 

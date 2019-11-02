@@ -9,11 +9,18 @@
 namespace App\Service\User;
 
 use App\Entity\User\User;
-use App\Service\AbstractService;
+use App\Repository\User\UserRepository;
 
 
-class UserService extends AbstractService
+class UserService
 {
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Get user by token, id
      * @param int $id
@@ -22,8 +29,7 @@ class UserService extends AbstractService
      */
     public function getUserByTokenId($id, $token): ?User
     {
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        return $repository->findOneBy([
+        return $this->userRepository->findOneBy([
             'id' => $id,
             'token' => $token
         ]);
@@ -36,12 +42,10 @@ class UserService extends AbstractService
      */
     public function changeUserActiveStatus($id): void
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $user2 = $entityManager->getRepository(User::class)->find($id);
-        $user2->setStatus('active');
-        $user2->setToken(null);
-        $entityManager->persist($user2);
-        $entityManager->flush();
+        $user = $this->userRepository->find($id);
+        $user->setStatus('active');
+        $user->setToken(null);
+        $this->userRepository->save($user);
     }
 
 }

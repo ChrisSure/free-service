@@ -35,8 +35,7 @@ class RegisterValidation
                         new Assert\Required(),
                         new Assert\NotBlank(),
                         new Assert\Email()
-                    ],
-                'role' => new Assert\NotBlank()
+                    ]
             ]
         );
         return $validator->validate($data, $constraint);
