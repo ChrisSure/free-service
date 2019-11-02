@@ -86,7 +86,6 @@ class Profile
     public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
-
         return $this;
     }
 
@@ -98,7 +97,6 @@ class Profile
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
-
         return $this;
     }
 
@@ -110,7 +108,6 @@ class Profile
     public function setSurname(?string $surname): self
     {
         $this->surname = $surname;
-
         return $this;
     }
 
@@ -122,7 +119,6 @@ class Profile
     public function setAbout(?string $about): self
     {
         $this->about = $about;
-
         return $this;
     }
 
@@ -134,7 +130,6 @@ class Profile
     public function setSex(?int $sex): self
     {
         $this->sex = $sex;
-
         return $this;
     }
 
@@ -146,7 +141,6 @@ class Profile
     public function setBirthday(?\DateTimeInterface $birthday): self
     {
         $this->birthday = $birthday;
-
         return $this;
     }
 
@@ -166,6 +160,7 @@ class Profile
     public function onPrePersist()
     {
         $this->created_at = new \DateTime("now");
+        return $this;
     }
 
     /**
@@ -175,6 +170,7 @@ class Profile
     public function onPreUpdate()
     {
         $this->updated_at = new \DateTime("now");
+        return $this;
     }
 
 
@@ -186,7 +182,6 @@ class Profile
     public function setUser(User $user): self
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -198,7 +193,6 @@ class Profile
     public function setCity(City $city): self
     {
         $this->city = $city;
-
         return $this;
     }
 }
