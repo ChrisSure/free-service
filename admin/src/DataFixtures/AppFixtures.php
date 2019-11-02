@@ -24,7 +24,7 @@ class AppFixtures extends Fixture
     {
         $this->garantedFillUserData($manager);
 
-        for ($i = 5; $i < 20; $i++) {
+        for ($i = 4; $i < 20; $i++) {
             // Create Users
             $user = new User();
             $user->setEmail('user'.$i. '@gmail.com');
@@ -32,7 +32,7 @@ class AppFixtures extends Fixture
             $user->setPassword($password);
             $statusArray = ['new', 'active', 'blocked'];
             $user->setStatus($statusArray[array_rand($statusArray)]);
-            $rolesArray = ['ROLE_USER', 'ROLE_WORKER', 'ROLE_MODERATOR', 'ROLE_ADMIN'];
+            $rolesArray = ['ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN'];
             $user->setRoles([$rolesArray[array_rand($rolesArray)]]);
             $user->onPrePersist();
             $user->onPreUpdate();
@@ -93,26 +93,16 @@ class AppFixtures extends Fixture
         $user2->onPrePersist();
         $user2->onPreUpdate();
         $manager->persist($user2);
-        // Worker
+        // Moderator
         $user3 = new User();
-        $user3->setEmail('worker@gmail.com');
+        $user3->setEmail('moderator@gmail.com');
         $user3->setStatus('active');
         $password = $this->encoder->encodePassword($user3, '123');
         $user3->setPassword($password);
-        $user3->setRoles(['ROLE_WORKER']);
+        $user3->setRoles(['ROLE_MODERATOR']);
         $user3->onPrePersist();
         $user3->onPreUpdate();
         $manager->persist($user3);
-        // Moderator
-        $user4 = new User();
-        $user4->setEmail('moderator@gmail.com');
-        $user4->setStatus('active');
-        $password = $this->encoder->encodePassword($user4, '123');
-        $user4->setPassword($password);
-        $user4->setRoles(['ROLE_MODERATOR']);
-        $user4->onPrePersist();
-        $user4->onPreUpdate();
-        $manager->persist($user4);
 
         $manager->flush();
     }

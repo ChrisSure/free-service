@@ -13,3 +13,9 @@ yarn-compile:
 	yarn encore dev
 yarn-watch:
 	yarn encore dev --watch
+
+
+### docker-compose run --rm admin-php-fpm
+### php bin/console make:migration
+### php bin/console doctrine:migrations:migrate
+### php bin/console doctrine:fixtures:load
