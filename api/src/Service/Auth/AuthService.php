@@ -48,6 +48,36 @@ class AuthService
     }
 
     /**
+     * Forget user password
+     * @param array $data
+     * @return void
+     */
+    public function forgetPassword(array $data): void
+    {
+        $token = $this->generateToken();
+
+        $user = $this->userRepository->findOneBy([
+            'email' => $data['email']
+        ]);
+        $user->setToken($token)->onPreUpdate();
+        $this->userRepository->save($user);
+
+        $this->mailService->sendForgetPassword($user, $token);
+    }
+
+    /**
+     * Set new password
+     * @param array $data
+     * @return void
+     */
+    public function setNewPassword(array $data): void
+    {
+        $user = $this->userRepository->find($data['id']);
+        $user->setPassword($this->hashPassword($user, $data['password']))->setToken(null)->onPreUpdate();
+        $this->userRepository->save($user);
+    }
+
+    /**
      * Generate string token
      * @return string
      */
