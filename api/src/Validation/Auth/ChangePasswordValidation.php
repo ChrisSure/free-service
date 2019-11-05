@@ -12,8 +12,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
-
-class NewPasswordValidation
+/**
+ * Class ChangePasswordValidation
+ * @package App\Validation\Auth
+ */
+class ChangePasswordValidation
 {
     /**
      * Validor for registartion

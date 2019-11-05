@@ -6,17 +6,17 @@
  * Time: 10:27
  */
 
-namespace App\Validation\Auth;
+namespace App\Validation\Cabinet\Profile;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 /**
- * Class ForgetValidation
- * @package App\Validation\Auth
+ * Class ChangeEmailValidation
+ * @package App\Validation\Cabinet\Profile
  */
-class ForgetValidation
+class ChangeEmailValidation
 {
     /**
      * Validor for registartion
@@ -28,6 +28,10 @@ class ForgetValidation
         $validator = Validation::createValidator();
         $constraint = new Assert\Collection(
             [
+                'id' =>
+                    [
+                        new Assert\NotBlank()
+                    ],
                 'email' =>
                     [
                         new Assert\Required(),

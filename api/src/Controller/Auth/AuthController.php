@@ -11,13 +11,12 @@ namespace App\Controller\Auth;
 use App\Service\Auth\AuthService;
 use App\Service\User\UserService;
 use App\Validation\Auth\ForgetValidation;
-use App\Validation\Auth\NewPasswordValidation;
+use App\Validation\Auth\ChangePasswordValidation;
 use App\Validation\Auth\RegisterValidation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 /**
@@ -25,7 +24,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class AuthController extends AbstractController
 {
+    /**
+     * @var AuthService
+     */
     private $authService;
+
+    /**
+     * @var UserService
+     */
     private $userService;
 
     public function __construct(AuthService $authService, UserService $userService)
@@ -40,7 +46,7 @@ class AuthController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
         $data = [
             'email' => $request->get('email'),
@@ -66,7 +72,7 @@ class AuthController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function confirm(Request $request)
+    public function confirm(Request $request): JsonResponse
     {
         $user = $this->userService->getUserByTokenId($request->get('id'), $request->get('token'));
         if (!$user) {
@@ -83,7 +89,7 @@ class AuthController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function forget(Request $request)
+    public function forget(Request $request): JsonResponse
     {
         $data = [
             'email' => $request->get('email'),
@@ -108,7 +114,7 @@ class AuthController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function confirm_password(Request $request)
+    public function confirm_password(Request $request): JsonResponse
     {
         $user = $this->userService->getUserByTokenId($request->get('id'), $request->get('token'));
         if (!$user) {
@@ -124,7 +130,7 @@ class AuthController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function new_password(Request $request)
+    public function new_password(Request $request): JsonResponse
     {
         $data = [
             'id'   =>  $request->get('id'),
@@ -132,7 +138,7 @@ class AuthController extends AbstractController
             'password_compare' => $request->get('password_compare'),
         ];
 
-        $violations = (new NewPasswordValidation())->validate($data);
+        $violations = (new ChangePasswordValidation())->validate($data);
         if ($violations->count() > 0) {
             return new JsonResponse(["error" => (string)$violations], 500);
         }
@@ -143,7 +149,6 @@ class AuthController extends AbstractController
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }
-
     }
 
 

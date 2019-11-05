@@ -12,7 +12,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
-
+/**
+ * Class RegisterValidation
+ * @package App\Validation\Auth
+ */
 class RegisterValidation
 {
     /**

@@ -8,12 +8,22 @@
 
 namespace App\Service\Email;
 
-
 use App\Entity\User\User;
 
+/**
+ * Class MailService
+ * @package App\Service\Email
+ */
 class MailService
 {
+    /**
+     * @var \Swift_Mailer
+     */
     private $mailer;
+
+    /**
+     * @var \Twig_Environment
+     */
     private $template;
 
     public function __construct(\Swift_Mailer $mailer, \Twig_Environment $template)

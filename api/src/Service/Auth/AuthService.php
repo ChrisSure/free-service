@@ -11,18 +11,32 @@ namespace App\Service\Auth;
 use App\Entity\User\User;
 use App\Repository\User\UserRepository;
 use App\Service\Email\MailService;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Service\Helpers\PasswordashService;
 
-
+/**
+ * Class AuthService
+ * @package App\Service\Auth
+ */
 class AuthService
 {
-    private $encoder;
+    /**
+     * @var PasswordashService
+     */
+    private $passService;
+
+    /**
+     * @var MailService
+     */
     private $mailService;
+
+    /**
+     * @var UserRepository
+     */
     private $userRepository;
 
-    public function __construct(UserPasswordEncoderInterface $encoder, MailService $mailService, UserRepository $userRepository)
+    public function __construct(PasswordashService $passService, MailService $mailService, UserRepository $userRepository)
     {
-        $this->encoder = $encoder;
+        $this->passService = $passService;
         $this->mailService = $mailService;
         $this->userRepository = $userRepository;
     }
@@ -35,10 +49,10 @@ class AuthService
     public function registerUser(array $data): void
     {
         $user = new User();
-        $token = $this->generateToken();
+        $token = $this->passService->generateToken();
         $user
             ->setEmail($data['email'])
-            ->setPassword($this->hashPassword($user, $data['password']))
+            ->setPassword($this->passService->hashPassword($user, $data['password']))
             ->setRoles(['ROLE_USER'])
             ->setStatus('new')
             ->setToken($token)
@@ -54,7 +68,7 @@ class AuthService
      */
     public function forgetPassword(array $data): void
     {
-        $token = $this->generateToken();
+        $token = $this->passService->generateToken();
 
         $user = $this->userRepository->findOneBy([
             'email' => $data['email']
@@ -73,28 +87,8 @@ class AuthService
     public function setNewPassword(array $data): void
     {
         $user = $this->userRepository->find($data['id']);
-        $user->setPassword($this->hashPassword($user, $data['password']))->setToken(null)->onPreUpdate();
+        $user->setPassword($this->passService->hashPassword($user, $data['password']))->setToken(null)->onPreUpdate();
         $this->userRepository->save($user);
-    }
-
-    /**
-     * Generate string token
-     * @return string
-     */
-    public function generateToken(): string
-    {
-        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
-    }
-
-    /**
-     * Hash password
-     * @param User $user
-     * @param string $password
-     * @return string
-     */
-    public function hashPassword(User $user, $password): string
-    {
-        return $this->encoder->encodePassword($user, $password);
     }
 
 }
