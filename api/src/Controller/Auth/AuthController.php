@@ -48,10 +48,7 @@ class AuthController extends AbstractController
      */
     public function register(Request $request): JsonResponse
     {
-        $data = [
-            'email' => $request->get('email'),
-            'password' => $request->get('password')
-        ];
+        $data = $request->request->all();
 
         $violations = (new RegisterValidation())->validate($data);
         if ($violations->count() > 0) {
@@ -60,7 +57,7 @@ class AuthController extends AbstractController
 
         try {
             $this->authService->registerUser($data);
-            return new JsonResponse("You successfull registered, check your email for the next step.");
+            return new JsonResponse("You successfull registered, check your email for the next step.", 201);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }
@@ -74,12 +71,13 @@ class AuthController extends AbstractController
      */
     public function confirm(Request $request): JsonResponse
     {
-        $user = $this->userService->getUserByTokenId($request->get('id'), $request->get('token'));
-        if (!$user) {
-            return new JsonResponse("You have missed data.", 401);
-        } else {
-            $this->userService->changeUserActiveStatus($request->get('id'));
-            return new JsonResponse("Congratulation. You can log in with new password.");
+        $data = $request->query->all();
+
+        try {
+            $this->authService->confirmUser($data);
+            return new JsonResponse("Congratulation. You can log in with new password.", 201);
+        } catch (\Exception $e) {
+            return new JsonResponse(["error" => $e->getMessage()], 500);
         }
     }
 
@@ -91,9 +89,7 @@ class AuthController extends AbstractController
      */
     public function forget(Request $request): JsonResponse
     {
-        $data = [
-            'email' => $request->get('email'),
-        ];
+        $data = $request->request->all();
 
         $violations = (new ForgetValidation())->validate($data);
         if ($violations->count() > 0) {
@@ -102,25 +98,28 @@ class AuthController extends AbstractController
 
         try {
             $this->authService->forgetPassword($data);
-            return new JsonResponse("Check your email for the next step.");
+            return new JsonResponse("Check your email for the next step.", 200);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }
     }
 
     /**
-     * Confirm user token for new password
-     * @Route("/confirm-password", name="auth_confirm",  methods={"GET"})
+     * Check user token for new password
+     * @Route("/check-token", name="auth_check_token",  methods={"GET"})
      * @param Request $request
      * @return JsonResponse
      */
     public function confirm_password(Request $request): JsonResponse
     {
-        $user = $this->userService->getUserByTokenId($request->get('id'), $request->get('token'));
-        if (!$user) {
-            return new JsonResponse("You have missed data.", 401);
+        $data = $request->query->all();
+
+        try {
+            $this->authService->checkUserToken($data);
+            return new JsonResponse("Success data.", 200);
+        } catch (\Exception $e) {
+            return new JsonResponse(["error" => $e->getMessage()], 500);
         }
-        return new JsonResponse("Success.");
     }
 
 
@@ -132,11 +131,7 @@ class AuthController extends AbstractController
      */
     public function new_password(Request $request): JsonResponse
     {
-        $data = [
-            'id'   =>  $request->get('id'),
-            'password' => $request->get('password'),
-            'password_compare' => $request->get('password_compare'),
-        ];
+        $data = $request->request->all();
 
         $violations = (new ChangePasswordValidation())->validate($data);
         if ($violations->count() > 0) {
@@ -145,7 +140,7 @@ class AuthController extends AbstractController
 
         try {
             $this->authService->setNewPassword($data);
-            return new JsonResponse("You have set new password. You can enter in your personal cabinet.");
+            return new JsonResponse("You have set new password. You can enter in your personal cabinet.", 200);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }

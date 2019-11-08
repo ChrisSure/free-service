@@ -38,49 +38,23 @@ class UserService
     }
 
     /**
-     * Get user by token, id
-     * @param int $id
-     * @param string $token
-     * @return ?User
-     */
-    public function getUserByTokenId($id, $token): ?User
-    {
-        return $this->userRepository->findOneBy([
-            'id' => $id,
-            'token' => $token
-        ]);
-    }
-
-    /**
-     * Change user status and clear token
-     * @param int $id
-     * @return void
-     */
-    public function changeUserActiveStatus($id): void
-    {
-        $user = $this->userRepository->find($id);
-        $user->setStatus('active');
-        $user->setToken(null);
-        $this->userRepository->save($user);
-    }
-
-    /**
      * Change user email
      * @param array $data
+     * @param int $id
      * @param int $current_user_id
      * @return void
      */
-    public function changeEmail(array $data, $current_user_id): void
+    public function changeEmail(array $data, $id, $current_user_id): void
     {
-        if ($current_user_id != $data['id']) {
+        if ($current_user_id != $id) {
             throw new NotAllowException('You don\'t allow this action.');
         }
 
-        $check_email = $this->userRepository->GetUserByEmailAndLikeId($data);
+        $check_email = $this->userRepository->GetUserByEmailAndLikeId($data, $id);
         if ($check_email)
             throw new UniqueException('That email have already used.');
 
-        $user = $this->userRepository->find($data['id']);
+        $user = $this->userRepository->find($id);
         if (!$user)
             throw new NotFoundHttpException('User doesn\'t exist.');
 
@@ -91,16 +65,17 @@ class UserService
     /**
      * Change user password
      * @param array $data
+     * @param int $id
      * @param int $current_user_id
      * @return void
      */
-    public function changePassword(array $data, $current_user_id): void
+    public function changePassword(array $data, $id, $current_user_id): void
     {
-        if ($current_user_id != $data['id']) {
+        if ($current_user_id != $id) {
             throw new NotAllowException('You don\'t allow this action.');
         }
 
-        $user = $this->userRepository->find($data['id']);
+        $user = $this->userRepository->find($id);
         if (!$user)
             throw new NotFoundHttpException('User doesn\'t exist.');
 

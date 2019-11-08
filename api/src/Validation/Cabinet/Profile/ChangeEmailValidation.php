@@ -28,10 +28,6 @@ class ChangeEmailValidation
         $validator = Validation::createValidator();
         $constraint = new Assert\Collection(
             [
-                'id' =>
-                    [
-                        new Assert\NotBlank()
-                    ],
                 'email' =>
                     [
                         new Assert\Required(),

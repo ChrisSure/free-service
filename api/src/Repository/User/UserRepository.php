@@ -34,13 +34,14 @@ class UserRepository extends ServiceEntityRepository
     /**
      * Get user that email can not be params email and id can be user->id
      * @param array $data
+     * @param int $id
      * @return array
      */
-    public function GetUserByEmailAndLikeId(array $data): array
+    public function GetUserByEmailAndLikeId(array $data, $id): array
     {
         $qb = $this->createQueryBuilder('u');
         $qb->where('u.id != :id')->andWhere('u.email = :email')
-            ->setParameter('id', $data['id'])
+            ->setParameter('id', $id)
             ->setParameter('email', $data['email']);
         return $qb->getQuery()
             ->getResult();

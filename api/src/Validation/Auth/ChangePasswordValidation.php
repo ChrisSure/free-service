@@ -28,10 +28,6 @@ class ChangePasswordValidation
         $validator = Validation::createValidator();
         $constraint = new Assert\Collection(
             [
-                'id' =>
-                    [
-                        new Assert\NotBlank()
-                    ],
                 'password' =>
                     [
                         new Assert\NotBlank(),
