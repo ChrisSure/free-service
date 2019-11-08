@@ -157,7 +157,7 @@ class Profile
     public function setBirthday($birthday): self
     {
         $date = date_create($birthday);
-        $this->created_at = date_format($date,"Y-m-d");
+        $this->birthday = $date;
         return $this;
     }
 
