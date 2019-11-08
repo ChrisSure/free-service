@@ -3,6 +3,7 @@
 namespace App\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -19,7 +20,15 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @ORM\OneToOne(targetEntity="Profile", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $profile;
+
+    /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Email()
+     * @Assert\Length(min=3)
+     * @Assert\NotBlank
      */
     private $email;
 
@@ -31,6 +40,8 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Length(min=3)
+     * @Assert\NotBlank
      */
     private $password;
 
@@ -61,6 +72,17 @@ class User implements UserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getProfile(): Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(Profile $profile): self
+    {
+        $this->profile = $profile;
+        return $this;
     }
 
     public function getEmail(): ?string

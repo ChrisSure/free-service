@@ -13,10 +13,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 /**
- * Class RegisterValidation
+ * Class ChangePasswordValidation
  * @package App\Validation\Auth
  */
-class RegisterValidation
+class ChangePasswordValidation
 {
     /**
      * Validor for registartion
@@ -31,13 +31,13 @@ class RegisterValidation
                 'password' =>
                     [
                         new Assert\NotBlank(),
-                        new Assert\Length(['min' => 2])
+                        new Assert\Length(['min' => 2]),
+                        new Assert\EqualTo(['value' => $data['password_compare'], 'message' => 'Passwords don\'t compare'])
                     ],
-                'email' =>
+                'password_compare' =>
                     [
-                        new Assert\Required(),
                         new Assert\NotBlank(),
-                        new Assert\Email()
+                        new Assert\Length(['min' => 2])
                     ]
             ]
         );

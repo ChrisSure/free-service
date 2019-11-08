@@ -20,6 +20,11 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @ORM\OneToOne(targetEntity="Profile", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $profile;
+
+    /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
      * @Assert\Length(min=3)
@@ -67,6 +72,17 @@ class User implements UserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getProfile(): Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(Profile $profile): self
+    {
+        $this->profile = $profile;
+        return $this;
     }
 
     public function getEmail(): ?string

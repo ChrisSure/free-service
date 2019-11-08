@@ -9,39 +9,78 @@
 namespace App\Service\User;
 
 use App\Entity\User\User;
-use App\Service\AbstractService;
+use App\Exceptions\NotAllowException;
+use App\Exceptions\UniqueException;
+use App\Repository\User\UserRepository;
+use App\Service\Helpers\PasswordashService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
-class UserService extends AbstractService
+/**
+ * Class UserService
+ * @package App\Service\User
+ */
+class UserService
 {
     /**
-     * Get user by token, id
-     * @param int $id
-     * @param string $token
-     * @return ?User
+     * @var PasswordashService
      */
-    public function getUserByTokenId($id, $token): ?User
+    private $passService;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    public function __construct(PasswordashService $passService, UserRepository $userRepository)
     {
-        $repository = $this->getDoctrine()->getRepository(User::class);
-        return $repository->findOneBy([
-            'id' => $id,
-            'token' => $token
-        ]);
+        $this->passService = $passService;
+        $this->userRepository = $userRepository;
     }
 
     /**
-     * Change user status and clear token
+     * Change user email
+     * @param array $data
      * @param int $id
+     * @param int $current_user_id
      * @return void
      */
-    public function changeUserActiveStatus($id): void
+    public function changeEmail(array $data, $id, $current_user_id): void
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $user2 = $entityManager->getRepository(User::class)->find($id);
-        $user2->setStatus('active');
-        $user2->setToken(null);
-        $entityManager->persist($user2);
-        $entityManager->flush();
+        if ($current_user_id != $id) {
+            throw new NotAllowException('You don\'t allow this action.');
+        }
+
+        $check_email = $this->userRepository->GetUserByEmailAndLikeId($data, $id);
+        if ($check_email)
+            throw new UniqueException('That email have already used.');
+
+        $user = $this->userRepository->find($id);
+        if (!$user)
+            throw new NotFoundHttpException('User doesn\'t exist.');
+
+        $user->setEmail($data['email'])->onPreUpdate();
+        $this->userRepository->save($user);
+    }
+
+    /**
+     * Change user password
+     * @param array $data
+     * @param int $id
+     * @param int $current_user_id
+     * @return void
+     */
+    public function changePassword(array $data, $id, $current_user_id): void
+    {
+        if ($current_user_id != $id) {
+            throw new NotAllowException('You don\'t allow this action.');
+        }
+
+        $user = $this->userRepository->find($id);
+        if (!$user)
+            throw new NotFoundHttpException('User doesn\'t exist.');
+
+        $user->setPassword($this->passService->hashPassword($user, $data['password']))->onPreUpdate();
+        $this->userRepository->save($user);
     }
 
 }

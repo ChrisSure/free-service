@@ -6,17 +6,17 @@
  * Time: 10:27
  */
 
-namespace App\Validation\Auth;
+namespace App\Validation\Cabinet\Profile;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 /**
- * Class RegisterValidation
- * @package App\Validation\Auth
+ * Class ChangeEmailValidation
+ * @package App\Validation\Cabinet\Profile
  */
-class RegisterValidation
+class ChangeEmailValidation
 {
     /**
      * Validor for registartion
@@ -28,11 +28,6 @@ class RegisterValidation
         $validator = Validation::createValidator();
         $constraint = new Assert\Collection(
             [
-                'password' =>
-                    [
-                        new Assert\NotBlank(),
-                        new Assert\Length(['min' => 2])
-                    ],
                 'email' =>
                     [
                         new Assert\Required(),

@@ -13,10 +13,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 /**
- * Class RegisterValidation
+ * Class ForgetValidation
  * @package App\Validation\Auth
  */
-class RegisterValidation
+class ForgetValidation
 {
     /**
      * Validor for registartion
@@ -28,11 +28,6 @@ class RegisterValidation
         $validator = Validation::createValidator();
         $constraint = new Assert\Collection(
             [
-                'password' =>
-                    [
-                        new Assert\NotBlank(),
-                        new Assert\Length(['min' => 2])
-                    ],
                 'email' =>
                     [
                         new Assert\Required(),

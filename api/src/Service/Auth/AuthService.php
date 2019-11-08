@@ -9,20 +9,37 @@
 namespace App\Service\Auth;
 
 use App\Entity\User\User;
-use App\Service\AbstractService;
+use App\Repository\User\UserRepository;
 use App\Service\Email\MailService;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Service\Helpers\PasswordashService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
-class AuthService extends AbstractService
+/**
+ * Class AuthService
+ * @package App\Service\Auth
+ */
+class AuthService
 {
-    private $encoder;
+    /**
+     * @var PasswordashService
+     */
+    private $passService;
+
+    /**
+     * @var MailService
+     */
     private $mailService;
 
-    public function __construct(UserPasswordEncoderInterface $encoder, MailService $mailService)
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    public function __construct(PasswordashService $passService, MailService $mailService, UserRepository $userRepository)
     {
-        $this->encoder = $encoder;
+        $this->passService = $passService;
         $this->mailService = $mailService;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -32,40 +49,93 @@ class AuthService extends AbstractService
      */
     public function registerUser(array $data): void
     {
-        $entityManager = $this->getDoctrine()->getManager();
         $user = new User();
-        $token = $this->generateToken();
+        $token = $this->passService->generateToken();
         $user
             ->setEmail($data['email'])
-            ->setPassword($this->hashPassword($user, $data['password']))
-            ->setRoles(($data['role'] == 'worker') ? ['ROLE_WORKER'] : ['ROLE_USER'])
+            ->setPassword($this->passService->hashPassword($user, $data['password']))
+            ->setRoles(['ROLE_USER'])
             ->setStatus('new')
             ->setToken($token)
             ->onPrePersist()->onPreUpdate();
-        $entityManager->persist($user);
-        $entityManager->flush();
-
+        $this->userRepository->save($user);
         $this->mailService->sendCheckRegistration($user, $token);
     }
 
     /**
-     * Generate string token
-     * @return string
+     * Confirm registration user
+     * @param array $data
+     * @return void
      */
-    public function generateToken(): string
+    public function confirmUser(array $data): void
     {
-        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $user = $this->userRepository->findOneBy([
+            'id' => $data['id'],
+            'token' => $data['token']
+        ]);
+        if (!$user)
+            throw new NotFoundHttpException('You have missed data.');
+
+        $user->setStatus('active');
+        $user->setToken(null);
+        $user->onPreUpdate();
+        $this->userRepository->save($user);
     }
 
     /**
-     * Hash password
-     * @param User $user
-     * @param string $password
-     * @return string
+     * Forget user password
+     * @param array $data
+     * @return void
      */
-    public function hashPassword(User $user, $password): string
+    public function forgetPassword(array $data): void
     {
-        return $this->encoder->encodePassword($user, $password);
+        $token = $this->passService->generateToken();
+
+        $user = $this->userRepository->findOneBy([
+            'email' => $data['email']
+        ]);
+        if (!$user)
+            throw new NotFoundHttpException('User doesn\'t exist.');
+
+        $user->setToken($token)->onPreUpdate();
+        $this->userRepository->save($user);
+
+        $this->mailService->sendForgetPassword($user, $token);
+    }
+
+    /**
+     * Check user token
+     * @param array $data
+     * @return void
+     */
+    public function checkUserToken(array $data): void
+    {
+        $user = $this->userRepository->findOneBy([
+            'id' => $data['id'],
+            'token' => $data['token']
+        ]);
+        if (!$user)
+            throw new NotFoundHttpException('You have missed data.');
+
+        $user->setToken(null);
+        $user->onPreUpdate();
+        $this->userRepository->save($user);
+    }
+
+    /**
+     * Set new password
+     * @param array $data
+     * @return void
+     */
+    public function setNewPassword(array $data): void
+    {
+        $user = $this->userRepository->find($data['id']);
+        if (!$user)
+            throw new NotFoundHttpException('User doesn\'t exist.');
+
+        $user->setPassword($this->passService->hashPassword($user, $data['password']))
+            ->setToken(null)->onPreUpdate();
+        $this->userRepository->save($user);
     }
 
 }

@@ -25,19 +25,6 @@ class AppFixtures extends Fixture
         $this->garantedFillUserData($manager);
 
         for ($i = 4; $i < 20; $i++) {
-            // Create Users
-            $user = new User();
-            $user->setEmail('user'.$i. '@gmail.com');
-            $password = $this->encoder->encodePassword($user, '123');
-            $user->setPassword($password);
-            $statusArray = ['new', 'active', 'blocked'];
-            $user->setStatus($statusArray[array_rand($statusArray)]);
-            $rolesArray = ['ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN'];
-            $user->setRoles([$rolesArray[array_rand($rolesArray)]]);
-            $user->onPrePersist();
-            $user->onPreUpdate();
-            // Create Users
-
             //Create Data
             $region = new Region();
             $region->setName('Region ' .$i);
@@ -55,16 +42,33 @@ class AppFixtures extends Fixture
             $profile->setLastname('lastname' .$i);
             $profile->setSurname('surname' .$i);
             $profile->setSex(mt_rand(0, 1));
+            $profile->setPhone('0979873654');
             $profile->setAbout('about' .$i);
-            $profile->setUser($user);
-            $profile->setBirthday(new \DateTime('2000-01-01'));
+            $profile->setBirthday('2012-07-31');
             $profile->onPrePersist();
             $profile->onPreUpdate();
-            $profile->setCity($city);
-            $manager->persist($profile);
             // Create Profile
 
+            // Create Users
+            $user = new User();
+            $user->setEmail('user'.$i. '@gmail.com');
+            $password = $this->encoder->encodePassword($user, '123');
+            $user->setPassword($password);
+            $statusArray = ['new', 'active', 'blocked'];
+            $user->setStatus($statusArray[array_rand($statusArray)]);
+            $rolesArray = ['ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN'];
+            $user->setRoles([$rolesArray[array_rand($rolesArray)]]);
+            $user->onPrePersist();
+            $user->onPreUpdate();
+            // Create Users
+
+            // Persist objects and save
+            $profile->setUser($user);
+            $profile->setCity($city);
+
+            $manager->persist($profile);
             $manager->persist($user);
+            // Persist objects and save
         }
         // Create Users All
 
