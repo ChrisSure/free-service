@@ -50,3 +50,12 @@ services:
             - "MYSQL_DATABASE=app"
         ports:
             - "33061:3306"
+    ### Client
+    service-client:
+        build:
+            context: ./
+            dockerfile: ${PWD}/client/docker/client.docker
+        volumes:
+            - ./client:/app
+        ports:
+            - '4200:4200'
