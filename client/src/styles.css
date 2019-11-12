@@ -11,6 +11,15 @@ body {
     color: #2F9F6B !important;
     background-color: inherit !important;
 }
+/* Validation */
+.form-help-text {
+    font-size: 12px;
+}
+
+.form-help-text {
+    color: #ff6c6c;
+}
+/* Validation */
 
 /* Header */
 .navbar-brand span {

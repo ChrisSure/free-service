@@ -16,11 +16,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contacts</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf="userInfoService.isAuth">
                         <a class="nav-link to_cabinet" routerLink="/cabinet">Cabinet</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link logout" href="#">(Log out)</a>
+                    <li class="nav-item" *ngIf="userInfoService.isAuth">
+                        <a class="nav-link logout" (click)="logout()" href="#">(Log out)</a>
                     </li>
                 </ul>
             </div>
