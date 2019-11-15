@@ -41,7 +41,7 @@ class AuthController extends AbstractController
     }
 
     /**
-     * Register user (worker | user)
+     * Register user
      * @Route("/register", name="auth_register",  methods={"POST"})
      * @param Request $request
      * @return JsonResponse

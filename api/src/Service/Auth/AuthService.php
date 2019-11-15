@@ -9,6 +9,7 @@
 namespace App\Service\Auth;
 
 use App\Entity\User\User;
+use App\Exceptions\UniqueException;
 use App\Repository\User\UserRepository;
 use App\Service\Email\MailService;
 use App\Service\Helpers\PasswordashService;
@@ -49,6 +50,10 @@ class AuthService
      */
     public function registerUser(array $data): void
     {
+        $userUnique = $user = $this->userRepository->findOneBy(['email' => $data['email']]);
+        if ($userUnique)
+            throw new UniqueException("User who has that email already isset.");
+
         $user = new User();
         $token = $this->passService->generateToken();
         $user

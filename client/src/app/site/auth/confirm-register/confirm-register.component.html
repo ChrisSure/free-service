@@ -1,0 +1,19 @@
+<div class="main">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="jumbotron" *ngIf="apiConfirm == true; else confirmError">
+                    <h1 class="display-4">Hello!</h1>
+                    <p class="lead">You have successful confirm your email, in order to login you can go link below</p>
+                    <hr class="my-4">
+                    <a class="btn btn-primary btn-lg" routerLink="/" role="button">Login</a>
+                </div>
+                <ng-template #confirmError>
+                    <div *ngIf="apiMessage != ''" class="alert alert-danger" role="alert">
+                        {{ apiMessage }}
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,61 +7,82 @@
                     <button type="button" class="btn btn-outline-dark">Search worker</button>
                 </div>
             </div>
-            <div class="col-lg-3">
-                <div class="sign_in">
-                    <h3 class="text-center">Sign In</h3>
-                    <div *ngIf="apiError != ''" class="alert alert-danger" role="alert">
-                        {{ apiError }}
+            <div class="col-lg-7">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <div *ngIf="apiMessage != ''" class="alert alert-{{ apiColor }}" role="alert">
+                            {{ apiMessage }}
+                        </div>
                     </div>
-                    <form [formGroup]="loginForm" (ngSubmit)="login()">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Email</label>
-                            <input type="email" class="form-control" name="email" formControlName="email" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-                            <span class="form-help-text" *ngIf="loginForm.get('email').invalid && loginForm.get('email').dirty">
-                                <span *ngIf="loginForm.get('email')['errors']['required']">Field can`t be empty.<br /></span>
-                                <span *ngIf="loginForm.get('email')['errors']['email']">Field must be correct email.</span>
-                            </span>
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="sign_in">
+                                    <h3 class="text-center">Sign In</h3>
+                                    <form [formGroup]="loginForm" (ngSubmit)="login()">
+                                        <div class="form-group">
+                                            <label for="email_login">Email</label>
+                                            <input type="email" class="form-control" name="email" formControlName="email" id="email_login" aria-describedby="emailHelp" placeholder="Enter email">
+                                            <span class="form-help-text" *ngIf="loginForm.get('email').invalid && loginForm.get('email').dirty">
+                                                <span *ngIf="loginForm.get('email')['errors']['required']">Field can`t be empty.<br /></span>
+                                                <span *ngIf="loginForm.get('email')['errors']['email']">Field must be correct email.</span>
+                                            </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="login_password">Password</label>
+                                            <input type="password" class="form-control" name="password" id="login_password" formControlName="password" placeholder="Password">
+                                            <span class="form-help-text" *ngIf="loginForm.get('password').invalid && loginForm.get('password').dirty">
+                                                <span *ngIf="loginForm.get('password')['errors']['required']">Field can`t be empty.</span>
+                                            </span>
+                                        </div>
+                                        <p class="forget"><a href="#">Forget password</a></p>
+                                        <button type="submit" [disabled]="loginForm.invalid" class="btn btn-outline-success">Submit</button>
+                                        <div class="main_social">
+                                            <a href="#"><i class="fa fa-facebook-square"></i></a>
+                                            <a href="#"><i class="fa fa-google-plus-square"></i></a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="sign_up">
+                                    <h3 class="text-center">Sign Up</h3>
+                                    <form [formGroup]="registerForm" (ngSubmit)="register()">
+                                        <div class="form-group">
+                                            <label for="register_email">Email</label>
+                                            <input type="email" class="form-control" name="email" formControlName="email" id="register_email" aria-describedby="emailHelp" placeholder="Enter email">
+                                            <span class="form-help-text" *ngIf="registerForm.get('email').invalid && registerForm.get('email').dirty">
+                                                <span *ngIf="registerForm.get('email')['errors']['required']">Field can`t be empty.<br /></span>
+                                                <span *ngIf="registerForm.get('email')['errors']['email']">Field must be correct email.</span>
+                                            </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="register_password">Password</label>
+                                            <input type="password" class="form-control" name="password" formControlName="password" id="register_password" placeholder="Password">
+                                            <span class="form-help-text" *ngIf="registerForm.get('password').invalid && registerForm.get('password').dirty">
+                                                <span *ngIf="registerForm.get('password')['errors']['required']">Field can`t be empty.</span>
+                                            </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="confirmPassword">Password Repeat</label>
+                                            <input type="password" class="form-control" name="confirmPassword" formControlName="confirmPassword" id="confirmPassword" placeholder="Password">
+                                            <span class="form-help-text" *ngIf="registerForm.hasError('notSame') && registerForm.get('confirmPassword').dirty">
+                                                <span *ngIf="registerForm.hasError('notSame')">Passwords don`t match.</span>
+                                            </span>
+                                        </div>
+                                        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-outline-success">Submit</button>
+                                        <div class="main_social">
+                                            <a href="#"><i class="fa fa-facebook-square"></i></a>
+                                            <a href="#"><i class="fa fa-google-plus-square"></i></a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control" name="password" formControlName="password" id="password" placeholder="Password">
-                            <span class="form-help-text" *ngIf="loginForm.get('password').invalid && loginForm.get('password').dirty">
-                                <span *ngIf="loginForm.get('password')['errors']['required']">Field can`t be empty.</span>
-                            </span>
-                        </div>
-                        <p class="forget"><a href="#">Forget password</a></p>
-                        <button type="submit" [disabled]="loginForm.invalid" class="btn btn-outline-success">Submit</button>
-                        <div class="main_social">
-                            <a href="#"><i class="fa fa-facebook-square"></i></a>
-                            <a href="#"><i class="fa fa-google-plus-square"></i></a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-3">
-                <div class="sign_up">
-                    <h3 class="text-center">Sign Up</h3>
-                    <form>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Email</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Password Repeat</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                        </div>
-                        <button type="button" class="btn btn-outline-success">Submit</button>
-                        <div class="main_social">
-                            <a href="#"><i class="fa fa-facebook-square"></i></a>
-                            <a href="#"><i class="fa fa-google-plus-square"></i></a>
-                        </div>
-                    </form>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>

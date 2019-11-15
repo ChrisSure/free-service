@@ -71,6 +71,9 @@ body {
     color: #CC3333 !important;
     margin-left: -12px;
 }
+.main .jumbotron {
+    background-color: #fff !important;
+}
 /* Main */
 
 

@@ -4,11 +4,13 @@ import { RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HomeComponent } from "./home/home.component";
 import { HeaderComponent } from "./blocks/header/header.component";
+import { ConfirmRegisterComponent } from "./auth/confirm-register/confirm-register.component";
 
 @NgModule({
     declarations: [
         HomeComponent,
-        HeaderComponent
+        HeaderComponent,
+        ConfirmRegisterComponent
     ],
     imports: [
         CommonModule,
