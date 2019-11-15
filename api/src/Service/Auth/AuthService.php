@@ -130,11 +130,12 @@ class AuthService
     /**
      * Set new password
      * @param array $data
+     * @param int $id
      * @return void
      */
-    public function setNewPassword(array $data): void
+    public function setNewPassword(array $data, $id): void
     {
-        $user = $this->userRepository->find($data['id']);
+        $user = $this->userRepository->find($id);
         if (!$user)
             throw new NotFoundHttpException('User doesn\'t exist.');
 

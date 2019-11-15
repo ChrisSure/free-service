@@ -15,6 +15,9 @@ export class AuthService {
     private baseUrlLogin: string;
     private baseUrlRegister: string;
     private baseUrlConfirmRegister: string;
+    private baseUrlForgetPassword: string;
+    private baseUrlCheckToken: string;
+    private baseUrlSetPassword: string;
     private headers = new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'
     });
@@ -24,6 +27,9 @@ export class AuthService {
         this.baseUrlLogin = BASE_API_URL + '/auth/login';
         this.baseUrlRegister = BASE_API_URL + '/auth/register';
         this.baseUrlConfirmRegister = BASE_API_URL + '/auth/confirm';
+        this.baseUrlForgetPassword = BASE_API_URL + '/auth/forget';
+        this.baseUrlCheckToken = BASE_API_URL + '/auth/check-token';
+        this.baseUrlSetPassword = BASE_API_URL + '/auth/new-password';
     }
     /**
      * Login user
@@ -62,6 +68,41 @@ export class AuthService {
         return this.http.get(
             this.baseUrlConfirmRegister + '?id=' + id + '&token=' + token, { headers: this.headers }
         ).pipe(map((response: Response) => response));
+    }
+
+    /**
+     * Forget user password send email
+     * @param {string} email
+     * @returns {Observable<Object>}
+     */
+    public forgetPassword(email: string) {
+        return this.http.post(
+            this.baseUrlForgetPassword, this.getFormUrlEncoded({email: email}), { headers: this.headers }
+        );
+    }
+
+    /**
+     * Check user token when he set new password
+     * @param {number} id
+     * @param {string} token
+     * @returns {Observable<Response>}
+     */
+    public checkToken(id: number, token:string) {
+        return this.http.get(
+            this.baseUrlCheckToken + '?id=' + id + '&token=' + token, { headers: this.headers }
+        ).pipe(map((response: Response) => response));
+    }
+
+    /**
+     * Set new user password
+     * @param {number} id
+     * @param {string} password
+     * @returns {Observable<Object>}
+     */
+    public newPassword(id: number, password:string) {
+        return this.http.post(
+            this.baseUrlSetPassword + '/' + id, this.getFormUrlEncoded({password: password}), { headers: this.headers }
+        );
     }
 
     /**

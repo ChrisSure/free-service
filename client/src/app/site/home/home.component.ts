@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../../services/auth/auth.service";
 import { Router } from "@angular/router";
 import { UserAuth } from "../../models/auth/register";
+import { ComparePasswordService } from "../../services/auth/compare-password.service";
 
 @Component({
     selector: 'app-home',
@@ -14,7 +15,7 @@ export class HomeComponent {
     public apiMessage: string = "";
     public apiColor: string = "";
 
-    constructor(private authService: AuthService, private router: Router) {
+    constructor(private authService: AuthService, comparePasswordService: ComparePasswordService, private router: Router) {
         this.loginForm = new FormGroup({
             'email': new FormControl('', [Validators.required, Validators.email]),
             'password': new FormControl('', Validators.required),
@@ -23,7 +24,7 @@ export class HomeComponent {
             'email': new FormControl('', [Validators.required, Validators.email]),
             'password': new FormControl('', Validators.required),
             'confirmPassword': new FormControl('', Validators.required),
-        }, { validators: this.comparePassword });
+        }, { validators: comparePasswordService.comparePassword });
     }
 
     public login() {
@@ -51,13 +52,6 @@ export class HomeComponent {
                     this.apiColor = "danger";
                 }
         });
-    }
-
-    private comparePassword(group: FormGroup) {
-        const pass = group.value.password;
-        const confirm = group.value.confirmPassword;
-
-        return pass === confirm ? null : { notSame: true };
     }
 
 }

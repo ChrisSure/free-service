@@ -74,6 +74,11 @@ body {
 .main .jumbotron {
     background-color: #fff !important;
 }
+.forget-password {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+}
 /* Main */
 
 

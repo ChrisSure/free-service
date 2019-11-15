@@ -5,12 +5,16 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HomeComponent } from "./home/home.component";
 import { HeaderComponent } from "./blocks/header/header.component";
 import { ConfirmRegisterComponent } from "./auth/confirm-register/confirm-register.component";
+import { ForgetPasswordComponent } from "./auth/forget-password/forget-password.component";
+import { NewPasswordComponent } from "./auth/new-password/new-password.component";
 
 @NgModule({
     declarations: [
         HomeComponent,
         HeaderComponent,
-        ConfirmRegisterComponent
+        ConfirmRegisterComponent,
+        ForgetPasswordComponent,
+        NewPasswordComponent
     ],
     imports: [
         CommonModule,

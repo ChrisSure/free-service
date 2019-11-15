@@ -8,6 +8,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AuthService } from "./services/auth/auth.service";
 import { TokenService } from "./services/auth/token.service";
 import { UserInfoService } from "./services/auth/user-info.service";
+import { ComparePasswordService } from "./services/auth/compare-password.service";
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { UserInfoService } from "./services/auth/user-info.service";
   providers: [
       AuthService,
       TokenService,
-      UserInfoService
+      UserInfoService,
+      ComparePasswordService
   ],
   bootstrap: [AppComponent]
 })

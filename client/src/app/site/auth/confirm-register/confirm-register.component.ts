@@ -1,4 +1,4 @@
-import {Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from "../../../services/auth/auth.service";
 import { ActivatedRoute } from "@angular/router";
 
@@ -8,7 +8,7 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class ConfirmRegisterComponent implements OnInit {
     public apiMessage: string = "";
-    public apiConfirm: boolean = false;
+    public apiColor: string = "";
 
     constructor(private authService: AuthService, private actRoute: ActivatedRoute) { }
 
@@ -17,11 +17,13 @@ export class ConfirmRegisterComponent implements OnInit {
         let token = this.actRoute.snapshot.queryParams['token'];
         this.authService.confirmRegister(id, token)
             .subscribe((res) => {
-                this.apiConfirm = true;
+                this.apiMessage = res.toString();
+                this.apiColor = "success";
             },
                 err => {
                     if (err.error) {
                         this.apiMessage = err.error.error;
+                        this.apiColor = "danger";
                     }
                 });
     }

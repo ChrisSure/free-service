@@ -75,7 +75,7 @@ class AuthController extends AbstractController
 
         try {
             $this->authService->confirmUser($data);
-            return new JsonResponse("Congratulation. You can log in with new password.", 201);
+            return new JsonResponse("Congratulation. You can sign in.", 201);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }
@@ -125,7 +125,7 @@ class AuthController extends AbstractController
 
     /**
      * Set new password for user
-     * @Route("/new-password", name="auth_forget_password",  methods={"POST"})
+     * @Route("/new-password/{id}", name="auth_forget_password",  methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -139,7 +139,7 @@ class AuthController extends AbstractController
         }
 
         try {
-            $this->authService->setNewPassword($data);
+            $this->authService->setNewPassword($data, $request->get('id'));
             return new JsonResponse("You have set new password. You can enter in your personal cabinet.", 200);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);

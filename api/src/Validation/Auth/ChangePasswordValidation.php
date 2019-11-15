@@ -32,12 +32,6 @@ class ChangePasswordValidation
                     [
                         new Assert\NotBlank(),
                         new Assert\Length(['min' => 2]),
-                        new Assert\EqualTo(['value' => $data['password_compare'], 'message' => 'Passwords don\'t compare'])
-                    ],
-                'password_compare' =>
-                    [
-                        new Assert\NotBlank(),
-                        new Assert\Length(['min' => 2])
                     ]
             ]
         );
