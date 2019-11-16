@@ -27,7 +27,7 @@ export class NewPasswordComponent implements OnInit {
         this.id = +this.actRoute.snapshot.queryParams['id'];
         let token = this.actRoute.snapshot.queryParams['token'];
         this.authService.checkToken(this.id, token)
-            .subscribe(res => , err => {
+            .subscribe((res) => {}, err => {
                     if (err.error) {
                         this.isCorrectData = false;
                         this.apiMessage = err.error.error;
