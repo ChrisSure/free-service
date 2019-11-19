@@ -24,7 +24,7 @@ export class AuthService {
     @Output() AuthChanged: EventEmitter<any> = new EventEmitter();
 
     constructor(private http: HttpClient, private tokenService: TokenService, private userInfoService: UserInfoService) {
-        this.baseUrlLogin = BASE_API_URL + '/auth/login';
+        this.baseUrlLogin = BASE_API_URL + '/auth/login-user';
         this.baseUrlRegister = BASE_API_URL + '/auth/register';
         this.baseUrlConfirmRegister = BASE_API_URL + '/auth/confirm';
         this.baseUrlForgetPassword = BASE_API_URL + '/auth/forget';
@@ -38,9 +38,7 @@ export class AuthService {
      */
     public login(user: UserAuth) {
         return this.http.post(
-            this.baseUrlLogin, user, { headers: {
-                    'Content-Type': 'application/json'
-                } }
+            this.baseUrlLogin, this.getFormUrlEncoded(user), {  headers: this.headers}
         ).pipe(map(data => {
             this.writeTokenFromResponse(data);
             this.AuthChanged.emit('Logged in');

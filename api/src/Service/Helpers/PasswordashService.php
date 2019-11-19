@@ -10,6 +10,7 @@ namespace App\Service\Helpers;
 
 use App\Entity\User\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class PasswordashService
@@ -45,5 +46,16 @@ class PasswordashService
     public function hashPassword(User $user, $password): string
     {
         return $this->encoder->encodePassword($user, $password);
+    }
+
+    /**
+     * Check user password
+     * @param $password
+     * @param UserInterface $user
+     * @return bool
+     */
+    public function checkPassword($password, UserInterface $user)
+    {
+        return $this->encoder->isPasswordValid($user, $password);
     }
 }

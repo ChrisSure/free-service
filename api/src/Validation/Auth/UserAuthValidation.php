@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Validation;
  * Class RegisterValidation
  * @package App\Validation\Auth
  */
-class RegisterValidation
+class UserAuthValidation
 {
     /**
      * Validor for registartion
