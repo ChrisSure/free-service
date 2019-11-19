@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Validation;
  * Class RegisterValidation
  * @package App\Validation\Auth
  */
-class RegisterValidation
+class UserAuthValidation
 {
     /**
      * Validor for registartion
@@ -28,17 +28,18 @@ class RegisterValidation
         $validator = Validation::createValidator();
         $constraint = new Assert\Collection(
             [
-                'password' =>
-                    [
-                        new Assert\NotBlank(),
-                        new Assert\Length(['min' => 2])
-                    ],
                 'email' =>
                     [
                         new Assert\Required(),
                         new Assert\NotBlank(),
                         new Assert\Email()
-                    ]
+                    ],
+                'password' =>
+                    [
+                        new Assert\NotBlank(),
+                        new Assert\Length(['min' => 2])
+                    ],
+
             ]
         );
         return $validator->validate($data, $constraint);

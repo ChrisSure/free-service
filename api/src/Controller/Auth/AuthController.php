@@ -12,11 +12,13 @@ use App\Service\Auth\AuthService;
 use App\Service\User\UserService;
 use App\Validation\Auth\ForgetValidation;
 use App\Validation\Auth\ChangePasswordValidation;
-use App\Validation\Auth\RegisterValidation;
+use App\Validation\Auth\UserAuthValidation;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 
 /**
@@ -41,7 +43,30 @@ class AuthController extends AbstractController
     }
 
     /**
-     * Register user (worker | user)
+     * Login user
+     * @Route("/login-user", name="auth_login",  methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function login(Request $request, JWTTokenManagerInterface $JWTManager)
+    {
+        $data = $request->request->all();
+
+        $violations = (new UserAuthValidation())->validate($data);
+        if ($violations->count() > 0) {
+            return new JsonResponse(["error" => (string)$violations], 500);
+        }
+
+        try {
+            $token = $this->authService->loginUser($data);
+            return new JsonResponse(['token' => $token], 201);
+        } catch (\Exception $e) {
+            return new JsonResponse(["error" => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Register user
      * @Route("/register", name="auth_register",  methods={"POST"})
      * @param Request $request
      * @return JsonResponse
@@ -50,7 +75,7 @@ class AuthController extends AbstractController
     {
         $data = $request->request->all();
 
-        $violations = (new RegisterValidation())->validate($data);
+        $violations = (new UserAuthValidation())->validate($data);
         if ($violations->count() > 0) {
             return new JsonResponse(["error" => (string)$violations], 500);
         }
@@ -75,7 +100,7 @@ class AuthController extends AbstractController
 
         try {
             $this->authService->confirmUser($data);
-            return new JsonResponse("Congratulation. You can log in with new password.", 201);
+            return new JsonResponse("Congratulation. You can sign in.", 201);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }
@@ -125,7 +150,7 @@ class AuthController extends AbstractController
 
     /**
      * Set new password for user
-     * @Route("/new-password", name="auth_forget_password",  methods={"POST"})
+     * @Route("/new-password/{id}", name="auth_forget_password",  methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -139,7 +164,7 @@ class AuthController extends AbstractController
         }
 
         try {
-            $this->authService->setNewPassword($data);
+            $this->authService->setNewPassword($data, $request->get('id'));
             return new JsonResponse("You have set new password. You can enter in your personal cabinet.", 200);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);

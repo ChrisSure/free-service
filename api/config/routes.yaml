@@ -1,4 +1,5 @@
 #config/routes.yaml
-auth_login:
-    path: /auth/login
-    methods:  [POST]
+#auth_login:
+    #path: /auth/login
+    #controller: App\Controller\Auth\AuthController::login
+    #methods:  [POST]
