@@ -1,10 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "../../services/auth/auth.service";
+import { AuthService as AuthUserService } from "../../services/auth/auth.service";
 import { Router } from "@angular/router";
 import { UserAuth } from "../../models/auth/register";
 import { ComparePasswordService } from "../../services/auth/compare-password.service";
-import {UserInfoService} from "../../services/auth/user-info.service";
+import { UserInfoService } from "../../services/auth/user-info.service";
+import { GoogleLoginProvider, FacebookLoginProvider, AuthService } from 'angular-6-social-login';
+import { SocialAuthService } from "../../services/auth/social-auth.service";
+import { SocialUsers } from "../../models/auth/social-user";
 
 @Component({
     selector: 'app-home',
@@ -16,8 +19,16 @@ export class HomeComponent implements OnInit {
     public apiMessage: string = "";
     public apiColor: string = "";
     public isAuth: boolean = false;
+    public socialusers: SocialUsers  = new SocialUsers();
 
-    constructor(private authService: AuthService, private userService: UserInfoService, comparePasswordService: ComparePasswordService, private router: Router) {
+
+    constructor(private authService: AuthUserService,
+                private userService: UserInfoService,
+                private comparePasswordService: ComparePasswordService,
+                private router: Router,
+                private OAuth: AuthService,
+                private socialService: SocialAuthService
+    ) {
         this.loginForm = new FormGroup({
             'email': new FormControl('', [Validators.required, Validators.email]),
             'password': new FormControl('', Validators.required),
@@ -33,6 +44,8 @@ export class HomeComponent implements OnInit {
         this.isAuth = (this.userService.isUser) ? true : false;
     }
 
+
+    // Casual auth
     public login() {
         let user = new UserAuth(this.loginForm.value.email, this.loginForm.value.password);
         this.authService.login(user)
@@ -45,7 +58,6 @@ export class HomeComponent implements OnInit {
                     }
             });
     }
-
     public register() {
         let user = new UserAuth(this.registerForm.value.email, this.registerForm.value.password);
         this.authService.register(user)
@@ -60,5 +72,21 @@ export class HomeComponent implements OnInit {
                 }
         });
     }
+    // Casual auth
 
+    // Social auth
+    public socialSignIn(socialProvider: string) {
+        let socialPlatformProvider = (socialProvider === 'facebook') ? FacebookLoginProvider.PROVIDER_ID : GoogleLoginProvider.PROVIDER_ID;
+
+        this.OAuth.signIn(socialPlatformProvider).then(socialusers => {
+            console.log(socialusers);
+            //this.socialLogin(socialusers);
+        });
+    }
+    private socialLogin(socialusers: SocialUsers) {
+        this.socialService.socialLogin(socialusers).subscribe((res: any) => {
+            console.log(res);
+        })
+    }
+    // Social auth
 }

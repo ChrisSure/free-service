@@ -36,8 +36,8 @@
                                 <p class="forget"><a routerLink="/forget-password">Forget password</a></p>
                                 <button type="submit" [disabled]="loginForm.invalid" class="btn btn-outline-success">Submit</button>
                                 <div class="main_social">
-                                    <a href="#"><i class="fa fa-facebook-square"></i></a>
-                                    <a href="#"><i class="fa fa-google-plus-square"></i></a>
+                                    <a href="#" (click)="socialSignIn('facebook')"><i class="fa fa-facebook-square"></i></a>
+                                    <a href="#" (click)="socialSignIn('google')"><i class="fa fa-google-plus-square"></i></a>
                                 </div>
                             </form>
                         </div>
