@@ -7,12 +7,14 @@ import { TokenService } from './token.service';
 import { UserInfoService } from './user-info.service';
 import { Observable } from 'rxjs';
 import { UserAuth } from "../../models/auth/register";
+import { SocialUser } from "../../models/auth/social-user";
 
 
 @Injectable()
 export class AuthService {
 
     private baseUrlLogin: string;
+    private baseUrlSocialLogin: string;
     private baseUrlRegister: string;
     private baseUrlConfirmRegister: string;
     private baseUrlForgetPassword: string;
@@ -25,6 +27,7 @@ export class AuthService {
 
     constructor(private http: HttpClient, private tokenService: TokenService, private userInfoService: UserInfoService) {
         this.baseUrlLogin = BASE_API_URL + '/auth/login-user';
+        this.baseUrlSocialLogin = BASE_API_URL + '/auth/login-social-user';
         this.baseUrlRegister = BASE_API_URL + '/auth/register';
         this.baseUrlConfirmRegister = BASE_API_URL + '/auth/confirm';
         this.baseUrlForgetPassword = BASE_API_URL + '/auth/forget';
@@ -39,6 +42,20 @@ export class AuthService {
     public login(user: UserAuth) {
         return this.http.post(
             this.baseUrlLogin, this.getFormUrlEncoded(user), {  headers: this.headers}
+        ).pipe(map(data => {
+            this.writeTokenFromResponse(data);
+            this.AuthChanged.emit('Logged in');
+        }));
+    }
+
+    /**
+     * Social login user
+     * @param {SocialUser} socialusers
+     * @returns {Observable<void>}
+     */
+    public socialLogin(socialusers: SocialUser) {
+        return this.http.post(
+            this.baseUrlSocialLogin, this.getFormUrlEncoded(socialusers), {  headers: this.headers}
         ).pipe(map(data => {
             this.writeTokenFromResponse(data);
             this.AuthChanged.emit('Logged in');

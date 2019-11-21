@@ -77,28 +77,44 @@ class Profile
      */
     private $city;
 
-
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return null|string
+     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
+    /**
+     * @param string $firstname
+     * @return Profile
+     */
     public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
+    /**
+     * @param string $lastname
+     * @return Profile
+     */
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
@@ -110,50 +126,82 @@ class Profile
         return $this->surname;
     }
 
+    /**
+     * @param null|string $surname
+     * @return Profile
+     */
     public function setSurname(?string $surname): self
     {
         $this->surname = $surname;
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getAbout(): ?string
     {
         return $this->about;
     }
 
+    /**
+     * @param null|string $about
+     * @return Profile
+     */
     public function setAbout(?string $about): self
     {
         $this->about = $about;
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getPhone(): ?string
     {
         return $this->phone;
     }
 
+    /**
+     * @param null|string $phone
+     * @return Profile
+     */
     public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getSex(): ?int
     {
         return $this->sex;
     }
 
+    /**
+     * @param int|null $sex
+     * @return Profile
+     */
     public function setSex(?int $sex): self
     {
         $this->sex = $sex;
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getBirthday(): int
     {
         return $this->birthday;
     }
 
+    /**
+     * @param $birthday
+     * @return Profile
+     */
     public function setBirthday($birthday): self
     {
         $date = date_create($birthday);
@@ -181,22 +229,36 @@ class Profile
         return $this;
     }
 
+    /**
+     * @return User
+     */
     public function getUser(): User
     {
         return $this->user;
     }
 
+    /**
+     * @param User $user
+     * @return Profile
+     */
     public function setUser(User $user): self
     {
         $this->user = $user;
         return $this;
     }
 
+    /**
+     * @return City
+     */
     public function getCity(): City
     {
         return $this->city;
     }
 
+    /**
+     * @param City $city
+     * @return Profile
+     */
     public function setCity(City $city): self
     {
         $this->city = $city;

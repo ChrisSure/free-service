@@ -11,7 +11,6 @@ import { UserInfoService } from "./services/auth/user-info.service";
 import { ComparePasswordService } from "./services/auth/compare-password.service";
 import { AuthServiceConfig } from 'angular-6-social-login';
 import { GoogleLoginProvider, FacebookLoginProvider, AuthService } from 'angular-6-social-login';
-import { SocialAuthService } from "./services/auth/social-auth.service";
 
 
 export function socialConfigs() {
@@ -19,7 +18,7 @@ export function socialConfigs() {
         [
             {
                 id: FacebookLoginProvider.PROVIDER_ID,
-                provider: new FacebookLoginProvider('2657541641007514')
+                provider: new FacebookLoginProvider('383462765893723')
             },
             {
                 id: GoogleLoginProvider.PROVIDER_ID,
@@ -46,7 +45,6 @@ export function socialConfigs() {
       TokenService,
       UserInfoService,
       ComparePasswordService,
-      SocialAuthService,
       AuthService,
       {
           provide: AuthServiceConfig,

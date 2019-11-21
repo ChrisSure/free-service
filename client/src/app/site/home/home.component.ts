@@ -6,8 +6,7 @@ import { UserAuth } from "../../models/auth/register";
 import { ComparePasswordService } from "../../services/auth/compare-password.service";
 import { UserInfoService } from "../../services/auth/user-info.service";
 import { GoogleLoginProvider, FacebookLoginProvider, AuthService } from 'angular-6-social-login';
-import { SocialAuthService } from "../../services/auth/social-auth.service";
-import { SocialUsers } from "../../models/auth/social-user";
+import { SocialUser } from "../../models/auth/social-user";
 
 @Component({
     selector: 'app-home',
@@ -19,15 +18,14 @@ export class HomeComponent implements OnInit {
     public apiMessage: string = "";
     public apiColor: string = "";
     public isAuth: boolean = false;
-    public socialusers: SocialUsers  = new SocialUsers();
+    public socialUser: SocialUser  = new SocialUser();
 
 
     constructor(private authService: AuthUserService,
                 private userService: UserInfoService,
                 private comparePasswordService: ComparePasswordService,
                 private router: Router,
-                private OAuth: AuthService,
-                private socialService: SocialAuthService
+                private OAuth: AuthService
     ) {
         this.loginForm = new FormGroup({
             'email': new FormControl('', [Validators.required, Validators.email]),
@@ -74,19 +72,35 @@ export class HomeComponent implements OnInit {
     }
     // Casual auth
 
+
     // Social auth
     public socialSignIn(socialProvider: string) {
         let socialPlatformProvider = (socialProvider === 'facebook') ? FacebookLoginProvider.PROVIDER_ID : GoogleLoginProvider.PROVIDER_ID;
 
-        this.OAuth.signIn(socialPlatformProvider).then(socialusers => {
-            console.log(socialusers);
-            //this.socialLogin(socialusers);
+        this.OAuth.signIn(socialPlatformProvider).then(socialUser => {
+            this.fillSocialUser(socialUser);
+            this.socialLogin(this.socialUser);
         });
     }
-    private socialLogin(socialusers: SocialUsers) {
-        this.socialService.socialLogin(socialusers).subscribe((res: any) => {
-            console.log(res);
-        })
+    private socialLogin(socialusers: SocialUser) {
+        this.authService.socialLogin(socialusers)
+            .subscribe(res => this.router.navigate(['/cabinet']),
+                    err => {
+                        if (err.error) {
+                            console.log(err);
+                            this.apiMessage = err.error.error;
+                            this.apiColor = "danger";
+                        }
+                    }
+            );
+    }
+    private fillSocialUser(socialUser) {
+        this.socialUser.email = socialUser.email;
+        this.socialUser.social_id = socialUser.id;
+        this.socialUser.provider = socialUser.provider;
+        this.socialUser.social_name = socialUser.name;
+        this.socialUser.social_image = socialUser.image;
+        this.socialUser.social_token = socialUser.token;
     }
     // Social auth
 }
