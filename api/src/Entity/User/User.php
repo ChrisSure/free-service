@@ -2,7 +2,9 @@
 
 namespace App\Entity\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -12,6 +14,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    public function __construct()
+    {
+        $this->social = new ArrayCollection();
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -23,6 +30,11 @@ class User implements UserInterface
      * @ORM\OneToOne(targetEntity="Profile", mappedBy="user", cascade={"persist", "remove"})
      */
     private $profile;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SocialUser", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $social;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -39,9 +51,8 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
-     * @Assert\Length(min=3)
-     * @Assert\NotBlank
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\Length(min=2)
      */
     private $password;
 
@@ -82,6 +93,24 @@ class User implements UserInterface
     public function setProfile(Profile $profile): self
     {
         $this->profile = $profile;
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getSocial()
+    {
+        return $this->social;
+    }
+
+    /**
+     * @param SocialUser $social
+     * @return User
+     */
+    public function setSocial(SocialUser $social): self
+    {
+        $this->social = $social;
         return $this;
     }
 

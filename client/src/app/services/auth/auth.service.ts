@@ -1,46 +1,76 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BASE_API_URL } from '../../globals';
-import { JwtToken } from '../../models/auth/jwt-token';
-import { map, finalize } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { TokenService } from './token.service';
 import { UserInfoService } from './user-info.service';
 import { Observable } from 'rxjs';
 import { UserAuth } from "../../models/auth/register";
+import { SocialUser } from "../../models/auth/social-user";
+import { UrlHelperService } from "../helpers/url-helper.service";
 
 
 @Injectable()
 export class AuthService {
+    /**
+     * @type {string}
+     */
+    private baseUrl: string;
 
-    private baseUrlLogin: string;
-    private baseUrlRegister: string;
-    private baseUrlConfirmRegister: string;
-    private baseUrlForgetPassword: string;
-    private baseUrlCheckToken: string;
-    private baseUrlSetPassword: string;
+    /**
+     * @type {HttpHeaders}
+     */
     private headers = new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'
     });
+
+    /**
+     * @type {EventEmitter<any>}
+     */
     @Output() AuthChanged: EventEmitter<any> = new EventEmitter();
 
-    constructor(private http: HttpClient, private tokenService: TokenService, private userInfoService: UserInfoService) {
-        this.baseUrlLogin = BASE_API_URL + '/auth/login-user';
-        this.baseUrlRegister = BASE_API_URL + '/auth/register';
-        this.baseUrlConfirmRegister = BASE_API_URL + '/auth/confirm';
-        this.baseUrlForgetPassword = BASE_API_URL + '/auth/forget';
-        this.baseUrlCheckToken = BASE_API_URL + '/auth/check-token';
-        this.baseUrlSetPassword = BASE_API_URL + '/auth/new-password';
+    /**
+     * @param {HttpClient} http
+     * @param {TokenService} tokenService
+     * @param {UserInfoService} userInfoService
+     * @param {UrlHelperService} urlService
+     */
+    constructor(
+            private http: HttpClient,
+            private tokenService: TokenService,
+            private userInfoService: UserInfoService,
+            private urlService: UrlHelperService
+            )
+    {
+        this.baseUrl = BASE_API_URL;
     }
+
     /**
      * Login user
      * @param {UserAuth} user
-     * @returns {Observable<void>}
+     * @returns {Observable<any>}
      */
-    public login(user: UserAuth) {
+    public login(user: UserAuth): Observable<any>
+    {
         return this.http.post(
-            this.baseUrlLogin, this.getFormUrlEncoded(user), {  headers: this.headers}
+            this.baseUrl + '/auth/login-user', this.urlService.getFormUrlEncoded(user), {  headers: this.headers}
         ).pipe(map(data => {
-            this.writeTokenFromResponse(data);
+            this.tokenService.writeToken(data);
+            this.AuthChanged.emit('Logged in');
+        }));
+    }
+
+    /**
+     * Social login user
+     * @param {SocialUser} socialusers
+     * @returns {Observable<any>}
+     */
+    public socialLogin(socialusers: SocialUser): Observable<any>
+    {
+        return this.http.post(
+            this.baseUrl + '/auth/login-social-user', this.urlService.getFormUrlEncoded(socialusers), {  headers: this.headers}
+        ).pipe(map(data => {
+            this.tokenService.writeToken(data);
             this.AuthChanged.emit('Logged in');
         }));
     }
@@ -50,9 +80,10 @@ export class AuthService {
      * @param {UserAuth} user
      * @returns {Observable<any>}
      */
-    public register(user: UserAuth): Observable<any> {
+    public register(user: UserAuth): Observable<any>
+    {
         return this.http.post(
-            this.baseUrlRegister, this.getFormUrlEncoded(user), { headers: this.headers }
+            this.baseUrl + '/auth/register', this.urlService.getFormUrlEncoded(user), { headers: this.headers }
         );
     }
 
@@ -60,22 +91,24 @@ export class AuthService {
      * Confirm user registration
      * @param {number} id
      * @param {string} token
-     * @returns {Observable<Response>}
+     * @returns {Observable<any>}
      */
-    public confirmRegister(id: number, token:string) {
+    public confirmRegister(id: number, token:string): Observable<any>
+    {
         return this.http.get(
-            this.baseUrlConfirmRegister + '?id=' + id + '&token=' + token, { headers: this.headers }
+            this.baseUrl + '/auth/confirm?id=' + id + '&token=' + token, { headers: this.headers }
         ).pipe(map((response: Response) => response));
     }
 
     /**
      * Forget user password send email
      * @param {string} email
-     * @returns {Observable<Object>}
+     * @returns {Observable<any>}
      */
-    public forgetPassword(email: string) {
+    public forgetPassword(email: string): Observable<any>
+    {
         return this.http.post(
-            this.baseUrlForgetPassword, this.getFormUrlEncoded({email: email}), { headers: this.headers }
+            this.baseUrl + '/auth/forget', this.urlService.getFormUrlEncoded({email: email}), { headers: this.headers }
         );
     }
 
@@ -83,11 +116,12 @@ export class AuthService {
      * Check user token when he set new password
      * @param {number} id
      * @param {string} token
-     * @returns {Observable<Response>}
+     * @returns {Observable<any>}
      */
-    public checkToken(id: number, token:string) {
+    public checkToken(id: number, token:string): Observable<any>
+    {
         return this.http.get(
-            this.baseUrlCheckToken + '?id=' + id + '&token=' + token, { headers: this.headers }
+            this.baseUrl + '/auth/check-token?id=' + id + '&token=' + token, { headers: this.headers }
         ).pipe(map((response: Response) => response));
     }
 
@@ -95,46 +129,23 @@ export class AuthService {
      * Set new user password
      * @param {number} id
      * @param {string} password
-     * @returns {Observable<Object>}
+     * @returns {Observable<any>}
      */
-    public newPassword(id: number, password:string) {
+    public newPassword(id: number, password:string): Observable<any>
+    {
         return this.http.post(
-            this.baseUrlSetPassword + '/' + id, this.getFormUrlEncoded({password: password}), { headers: this.headers }
+            this.baseUrl + '/auth/new-password/' + id, this.urlService.getFormUrlEncoded({password: password}), { headers: this.headers }
         );
     }
 
     /**
      * Logout user
+     * @returns void
      */
-    public logout() {
+    public logout(): void
+    {
         this.tokenService.deleteToken();
         this.AuthChanged.emit('Logged out');
-    }
-
-    /**
-     * Write info in token
-     * @param response
-     */
-    writeTokenFromResponse(response: any) {
-        const token: JwtToken = new JwtToken(
-            response['token']
-        );
-        this.tokenService.writeToken(token);
-    }
-
-    /**
-     * Encode url
-     * @param toConvert
-     * @returns {string}
-     */
-    getFormUrlEncoded(toConvert) {
-        const formBody = [];
-        for (const property in toConvert) {
-            const encodedKey = encodeURIComponent(property);
-            const encodedValue = encodeURIComponent(toConvert[property]);
-            formBody.push(encodedKey + '=' + encodedValue);
-        }
-        return formBody.join('&');
     }
 
 }

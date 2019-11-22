@@ -8,17 +8,31 @@ import { UserInfoService } from "../../../services/auth/user-info.service";
     templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnInit {
-
+    /**
+     * @type {boolean}
+     */
     public isAuth: boolean = false;
 
-    constructor(private authService: AuthService, private router: Router, private userInfoService: UserInfoService) {
+    /**
+     * @param {AuthService} authService
+     * @param {Router} router
+     * @param {UserInfoService} userInfoService
+     */
+    constructor(private authService: AuthService, private router: Router, private userInfoService: UserInfoService)
+    {
     }
 
-    ngOnInit() {
+    ngOnInit()
+    {
 
     }
 
-    logout() {
+    /**
+     * Logout user
+     * @returns void
+     */
+    logout(): void
+    {
         this.authService.logout();
         this.router.navigate(['/']);
     }

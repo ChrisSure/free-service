@@ -25,6 +25,11 @@ class User implements UserInterface
     private $profile;
 
     /**
+     * @ORM\OneToMany(targetEntity="SocialUser", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $social;
+
+    /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
      * @Assert\Length(min=3)
@@ -39,9 +44,8 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
-     * @Assert\Length(min=3)
-     * @Assert\NotBlank
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\Length(min=2)
      */
     private $password;
 
@@ -68,28 +72,62 @@ class User implements UserInterface
      */
     private $token;
 
-
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return Profile
+     */
     public function getProfile(): Profile
     {
         return $this->profile;
     }
 
+    /**
+     * @param Profile $profile
+     * @return User
+     */
     public function setProfile(Profile $profile): self
     {
         $this->profile = $profile;
         return $this;
     }
 
+    /**
+     * @return SocialUser
+     */
+    public function getSocial(): SocialUser
+    {
+        return $this->social;
+    }
+
+    /**
+     * @param SocialUser $social
+     * @return User
+     */
+    public function setSocial(SocialUser $social): self
+    {
+        $this->social = $social;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     * @return User
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -115,14 +153,16 @@ class User implements UserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         //$roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
+    /**
+     * @param array $roles
+     * @return User
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
         return $this;
     }
 
@@ -134,18 +174,28 @@ class User implements UserInterface
         return (string) $this->password;
     }
 
+    /**
+     * @param string $password
+     * @return User
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getStatus(): ?string
     {
         return $this->status;
     }
 
+    /**
+     * @param string $status
+     * @return User
+     */
     public function setStatus(string $status): self
     {
         $this->status = $status;
@@ -190,11 +240,18 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
+    /**
+     * @return null|string
+     */
     public function getToken(): ?string
     {
         return $this->token;
     }
 
+    /**
+     * @param null|string $token
+     * @return User
+     */
     public function setToken(?string $token): self
     {
         $this->token = $token;

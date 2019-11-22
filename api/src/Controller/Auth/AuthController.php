@@ -13,7 +13,6 @@ use App\Service\User\UserService;
 use App\Validation\Auth\ForgetValidation;
 use App\Validation\Auth\ChangePasswordValidation;
 use App\Validation\Auth\UserAuthValidation;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -48,7 +47,7 @@ class AuthController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function login(Request $request, JWTTokenManagerInterface $JWTManager)
+    public function login(Request $request)
     {
         $data = $request->request->all();
 
