@@ -11,6 +11,8 @@ import { UserInfoService } from "./services/auth/user-info.service";
 import { ComparePasswordService } from "./services/auth/compare-password.service";
 import { AuthServiceConfig } from 'angular-6-social-login';
 import { GoogleLoginProvider, FacebookLoginProvider, AuthService } from 'angular-6-social-login';
+import { UrlHelperService } from "./services/helpers/url-helper.service";
+import { MessageService } from "./services/helpers/message.service";
 
 
 export function socialConfigs() {
@@ -45,6 +47,8 @@ export function socialConfigs() {
       TokenService,
       UserInfoService,
       ComparePasswordService,
+      UrlHelperService,
+      MessageService,
       AuthService,
       {
           provide: AuthServiceConfig,

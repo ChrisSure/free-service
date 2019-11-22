@@ -5,7 +5,13 @@ import { FormGroup } from "@angular/forms";
 @Injectable()
 export class ComparePasswordService {
 
-    public comparePassword(group: FormGroup) {
+    /**
+     * Compare passsword validation
+     * @param {FormGroup} group
+     * @return {any}
+     */
+    public comparePassword(group: FormGroup): any
+    {
         const pass = group.value.password;
         const confirm = group.value.confirmPassword;
 

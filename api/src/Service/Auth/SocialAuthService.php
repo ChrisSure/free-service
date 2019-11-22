@@ -58,9 +58,9 @@ class SocialAuthService
         }
         if (!in_array($data['provider'], $this->getArrayProviders($user))) {
             $socialUser = new SocialUser();
-            $socialUser->setUser($user)->setSocialId($data['social_id'])->setProvider($data['provider'])
-                ->setSocialName($data['social_name'])->setSocialImage($data['social_image'])
-                ->setSocialToken($data['social_token']);
+            $socialUser->setUser($user)->setSocialId($data['id'])->setProvider($data['provider'])
+                ->setSocialName($data['name'])->setSocialImage($data['image'])
+                ->setSocialToken($data['token']);
             $this->socialRepository->save($socialUser);
         }
 

@@ -24,7 +24,10 @@ class SocialAuthController extends AbstractController
      */
     private $socialAuthService;
 
-
+    /**
+     * SocialAuthController constructor.
+     * @param SocialAuthService $socialAuthService
+     */
     public function __construct(SocialAuthService $socialAuthService)
     {
         $this->socialAuthService = $socialAuthService;

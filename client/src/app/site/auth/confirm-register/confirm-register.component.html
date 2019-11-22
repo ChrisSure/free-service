@@ -2,8 +2,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <div *ngIf="apiMessage != ''" class="alert alert-{{ apiColor }} alert-dismissible fade show" role="alert">
-                    {{ apiMessage }}
+                <div *ngIf="messageService.apiMessage != ''" class="alert alert-{{ messageService.apiColor }} alert-dismissible fade show" role="alert">
+                    {{ messageService.apiMessage }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
