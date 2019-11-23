@@ -13,10 +13,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class PasswordashService
+ * Class PasswordHashService
  * @package App\Service\Helpers
  */
-class PasswordashService
+class PasswordHashService
 {
     /**
      * @var UserPasswordEncoderInterface
@@ -50,11 +50,11 @@ class PasswordashService
 
     /**
      * Check user password
-     * @param $password
+     * @param string $password
      * @param UserInterface $user
      * @return bool
      */
-    public function checkPassword($password, UserInterface $user)
+    public function checkPassword($password, UserInterface $user): bool
     {
         return $this->encoder->isPasswordValid($user, $password);
     }

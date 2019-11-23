@@ -13,7 +13,7 @@ use App\Exceptions\NotAllowException;
 use App\Exceptions\UniqueException;
 use App\Repository\User\UserRepository;
 use App\Service\Email\MailService;
-use App\Service\Helpers\PasswordashService;
+use App\Service\Helpers\PasswordHashService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,7 +42,7 @@ class AuthService
      */
     private $userRepository;
 
-    public function __construct(PasswordashService $passService, JwtService $jwtService, MailService $mailService, UserRepository $userRepository)
+    public function __construct(PasswordHashService $passService, JwtService $jwtService, MailService $mailService, UserRepository $userRepository)
     {
         $this->passService = $passService;
         $this->jwtService = $jwtService;
