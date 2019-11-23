@@ -54,9 +54,9 @@ class AppFixtures extends Fixture
             $user->setEmail('user'.$i. '@gmail.com');
             $password = $this->encoder->encodePassword($user, '123');
             $user->setPassword($password);
-            $statusArray = ['new', 'active', 'blocked'];
+            $statusArray = [User::$STATUS_ACTIVE, User::$STATUS_NEW, User::$STATUS_BLOCKED];
             $user->setStatus($statusArray[array_rand($statusArray)]);
-            $rolesArray = ['ROLE_USER', 'ROLE_MODERATOR', 'ROLE_ADMIN'];
+            $rolesArray = [User::$ROLE_USER, User::$ROLE_MODERATOR, User::$ROLE_ADMIN];
             $user->setRoles([$rolesArray[array_rand($rolesArray)]]);
             $user->onPrePersist();
             $user->onPreUpdate();
@@ -80,30 +80,30 @@ class AppFixtures extends Fixture
         // Super Admin
         $user1 = new User();
         $user1->setEmail('super@gmail.com');
-        $user1->setStatus('active');
+        $user1->setStatus(User::$STATUS_ACTIVE);
         $password = $this->encoder->encodePassword($user1, '123');
         $user1->setPassword($password);
-        $user1->setRoles(['ROLE_SUPER_ADMIN']);
+        $user1->setRoles([User::$ROLE_SUPER_ADMIN]);
         $user1->onPrePersist();
         $user1->onPreUpdate();
         $manager->persist($user1);
         // User
         $user2 = new User();
         $user2->setEmail('user@gmail.com');
-        $user2->setStatus('active');
+        $user2->setStatus(User::$STATUS_ACTIVE);
         $password = $this->encoder->encodePassword($user2, '123');
         $user2->setPassword($password);
-        $user2->setRoles(['ROLE_USER']);
+        $user2->setRoles([User::$ROLE_USER]);
         $user2->onPrePersist();
         $user2->onPreUpdate();
         $manager->persist($user2);
         // Moderator
         $user3 = new User();
         $user3->setEmail('moderator@gmail.com');
-        $user3->setStatus('active');
+        $user3->setStatus(User::$STATUS_ACTIVE);
         $password = $this->encoder->encodePassword($user3, '123');
         $user3->setPassword($password);
-        $user3->setRoles(['ROLE_MODERATOR']);
+        $user3->setRoles([User::$ROLE_MODERATOR]);
         $user3->onPrePersist();
         $user3->onPreUpdate();
         $manager->persist($user3);

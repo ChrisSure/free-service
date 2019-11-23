@@ -79,6 +79,15 @@ class User implements UserInterface
      */
     private $token;
 
+    public static $ROLE_USER = "ROLE_USER";
+    public static $ROLE_MODERATOR = "ROLE_MODERATOR";
+    public static $ROLE_ADMIN = "ROLE_ADMIN";
+    public static $ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";
+
+    public static $STATUS_NEW = "new";
+    public static $STATUS_ACTIVE = "active";
+    public static $STATUS_BLOCKED = "blocked";
+
 
     public function getId(): ?int
     {
