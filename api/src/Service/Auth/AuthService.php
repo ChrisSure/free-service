@@ -13,7 +13,7 @@ use App\Exceptions\NotAllowException;
 use App\Exceptions\UniqueException;
 use App\Repository\User\UserRepository;
 use App\Service\Email\MailService;
-use App\Service\Helpers\PasswordashService;
+use App\Service\Helpers\PasswordHashService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,7 +42,7 @@ class AuthService
      */
     private $userRepository;
 
-    public function __construct(PasswordashService $passService, JwtService $jwtService, MailService $mailService, UserRepository $userRepository)
+    public function __construct(PasswordHashService $passService, JwtService $jwtService, MailService $mailService, UserRepository $userRepository)
     {
         $this->passService = $passService;
         $this->jwtService = $jwtService;
@@ -66,8 +66,8 @@ class AuthService
         $user
             ->setEmail($data['email'])
             ->setPassword($this->passService->hashPassword($user, $data['password']))
-            ->setRoles(['ROLE_USER'])
-            ->setStatus('new')
+            ->setRoles([User::$ROLE_USER])
+            ->setStatus(User::$STATUS_NEW)
             ->setToken($token)
             ->onPrePersist()->onPreUpdate();
         $this->userRepository->save($user);
@@ -88,7 +88,7 @@ class AuthService
         if (!$user)
             throw new NotFoundHttpException('You have missed data.');
 
-        $user->setStatus('active');
+        $user->setStatus(User::$STATUS_ACTIVE);
         $user->setToken(null);
         $user->onPreUpdate();
         $this->userRepository->save($user);
@@ -175,7 +175,7 @@ class AuthService
         if (!$user || !$this->passService->checkPassword($data['password'], $user))
             throw new NotFoundHttpException('You have entered mistake login or password.');
 
-        if ($user->getStatus() != 'active')
+        if ($user->getStatus() != User::$STATUS_ACTIVE)
             throw new NotAllowException('You didn\'t accept your email.');
 
         return $user;

@@ -32,7 +32,7 @@ class JwtService
      * @param UserInterface $user
      * @return string
      */
-    public function createToken(UserInterface $user)
+    public function createToken(UserInterface $user): string
     {
         return $this->JWTManager->create($user);
     }

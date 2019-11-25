@@ -193,7 +193,7 @@ class Profile
     /**
      * @return int
      */
-    public function getBirthday(): int
+    public function getBirthday(): \DateTime
     {
         return $this->birthday;
     }

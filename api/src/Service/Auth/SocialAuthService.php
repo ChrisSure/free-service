@@ -46,13 +46,13 @@ class SocialAuthService
      */
     public function loginSocialUser(array $data): string
     {
-        if (!in_array($data['provider'],SocialUser::$listProviders))
+        if (!in_array($data['provider'], SocialUser::$listProviders))
             throw new NotFoundHttpException('Provider' . $data['provider'] . ' doesn\'t exist.');
 
         $user = $this->userRepository->findOneBy(['email' => $data['email']]);
         if (!$user) {
             $user = new User();
-            $user->setEmail($data['email'])->setRoles(['ROLE_USER'])->setStatus('active')
+            $user->setEmail($data['email'])->setRoles([User::$ROLE_USER])->setStatus(User::$STATUS_ACTIVE)
                 ->onPrePersist()->onPreUpdate();
             $this->userRepository->save($user);
         }

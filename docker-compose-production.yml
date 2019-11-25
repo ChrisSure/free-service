@@ -1,0 +1,61 @@
+version: '3'
+services:
+    ### Admin-panel
+    admin-nginx:
+        build:
+            context: ./
+            dockerfile: ${PWD}/admin/docker/nginx.docker
+        volumes:
+            - ./admin:/app
+        depends_on:
+            - admin-php-fpm
+        ports:
+            - "7777:80"
+    admin-php-fpm:
+        build:
+            context: ./
+            dockerfile: ${PWD}/admin/docker/php-fpm.docker
+        volumes:
+            - ./admin:/app
+        depends_on:
+            - service-mysql
+    ### Api
+    api-nginx:
+        build:
+            context: ./
+            dockerfile: ${PWD}/api/docker/nginx.docker
+        volumes:
+            - ./api:/app
+        depends_on:
+            - api-php-fpm
+        ports:
+            - "9999:80"
+    api-php-fpm:
+        build:
+            context: ./
+            dockerfile: ${PWD}/api/docker/php-fpm.docker
+        volumes:
+            - ./api:/app
+        depends_on:
+            - service-mysql
+    ### Database
+    service-mysql:
+        image: mysql:5.7
+        volumes:
+            - ${PWD}/storage/mysql:/var/lib/mysql
+        environment:
+            - "MYSQL_ROOT_PASSWORD=secret"
+            - "MYSQL_USER=app"
+            - "MYSQL_PASSWORD=secret"
+            - "MYSQL_DATABASE=app"
+        ports:
+            - "33061:3306"
+    ### Client
+    service-client:
+        build:
+            context: ./
+            dockerfile: ${PWD}/client/docker/production/client.docker
+        volumes:
+            - ./client:/app
+        ports:
+            - '80:4200'

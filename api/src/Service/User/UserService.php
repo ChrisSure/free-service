@@ -12,7 +12,7 @@ use App\Entity\User\User;
 use App\Exceptions\NotAllowException;
 use App\Exceptions\UniqueException;
 use App\Repository\User\UserRepository;
-use App\Service\Helpers\PasswordashService;
+use App\Service\Helpers\PasswordHashService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -31,7 +31,7 @@ class UserService
      */
     private $userRepository;
 
-    public function __construct(PasswordashService $passService, UserRepository $userRepository)
+    public function __construct(PasswordHashService $passService, UserRepository $userRepository)
     {
         $this->passService = $passService;
         $this->userRepository = $userRepository;
