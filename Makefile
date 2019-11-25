@@ -26,6 +26,13 @@ yarn-watch:
 	yarn encore dev --watch
 
 
+### Deploy production
+deploy-production:
+	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'rm -rf docker-compose.yml .env'
+	scp -o StrictHostKeyChecking=no -P ${PRODUCTION_PORT} docker-compose-production.yml ${PRODUCTION_HOST}:docker-compose.yml
+	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose --build -d'
+
+
 
 ### docker-compose run --rm admin-php-fpm
 ### docker-compose run --rm admin-php-fpm php bin/console make:migration
