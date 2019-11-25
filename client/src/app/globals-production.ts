@@ -1,0 +1,1 @@
+export const BASE_API_URL: string = 'http://work-profession.space:9999';
