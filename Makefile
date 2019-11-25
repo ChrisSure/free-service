@@ -5,6 +5,8 @@ build: docker-build
 adut: docker-admin-unit-tests
 aput: docker-api-unit-tests
 
+deploy: deploy-production
+
 ### Docker init
 docker-up:
 	docker-compose up -d
@@ -28,9 +30,11 @@ yarn-watch:
 
 ### Deploy production
 deploy-production:
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'rm -rf docker-compose.yml .env'
-	scp -o StrictHostKeyChecking=no -P ${PRODUCTION_PORT} docker-compose-production.yml ${PRODUCTION_HOST}:docker-compose.yml
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose --build -d'
+	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'rm -rf docker-compose.yml'
+	scp -o StrictHostKeyChecking=no -P 22 docker-compose-production.yml 185.65.244.241:docker-compose.yml
+	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'rm -rf client/src/app/globals.ts'
+	scp -o StrictHostKeyChecking=no -P 22 client/src/app/globals-production.ts 185.65.244.241:client/src/app/globals.ts
+	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'docker-compose --build -d'
 
 
 
