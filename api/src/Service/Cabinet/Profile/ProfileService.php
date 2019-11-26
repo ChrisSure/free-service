@@ -43,6 +43,17 @@ class ProfileService
     }
 
     /**
+     * Is filled user profile
+     * @param $id
+     * @return bool
+     */
+    public function isFilledProfile($id): bool
+    {
+        return ($this->profileRepository->findOneBy(['user' => $id])) ? true : false;
+    }
+
+
+    /**
      * Created user profile
      * @param array $data
      * @param int $current_user_id
@@ -50,10 +61,6 @@ class ProfileService
      */
     public function createdProfile(array $data, $current_user_id): void
     {
-        if ($current_user_id != $data['user']) {
-            throw new NotAllowException('You don\'t allow this action.');
-        }
-
         $user = $this->userRepository->find($data['user']);
         if (!$user)
             throw new NotFoundHttpException('User doesn\'t exist.');
@@ -84,10 +91,6 @@ class ProfileService
      */
     public function updateProfile(array $data, $id, $current_user_id): void
     {
-        if ($current_user_id != $data['user']) {
-            throw new NotAllowException('You don\'t allow this action.');
-        }
-
         $user = $this->userRepository->find($data['user']);
         if (!$user)
             throw new NotFoundHttpException('User doesn\'t exist.');

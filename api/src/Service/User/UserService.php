@@ -46,10 +46,6 @@ class UserService
      */
     public function changeEmail(array $data, $id, $current_user_id): void
     {
-        if ($current_user_id != $id) {
-            throw new NotAllowException('You don\'t allow this action.');
-        }
-
         $check_email = $this->userRepository->GetUserByEmailAndLikeId($data, $id);
         if ($check_email)
             throw new UniqueException('That email have already used.');
@@ -71,10 +67,6 @@ class UserService
      */
     public function changePassword(array $data, $id, $current_user_id): void
     {
-        if ($current_user_id != $id) {
-            throw new NotAllowException('You don\'t allow this action.');
-        }
-
         $user = $this->userRepository->find($id);
         if (!$user)
             throw new NotFoundHttpException('User doesn\'t exist.');

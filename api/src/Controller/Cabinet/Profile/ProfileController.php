@@ -41,6 +41,22 @@ class ProfileController extends AbstractController
     }
 
     /**
+     * Is filled user profile
+     * @Route("/profile/{id}/is-filled", name="cabinet_profile_is_filled",  methods={"GET"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function isFilledProfile(Request $request)
+    {
+        try {
+            $result = $this->profileService->isFilledProfile($request->get('id'));
+            return new JsonResponse($result, 201);
+        } catch (\Exception $e) {
+            return new JsonResponse(["error" => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Create user profile
      * @Route("/profile", name="cabinet_create_profile",  methods={"POST"})
      * @param Request $request
