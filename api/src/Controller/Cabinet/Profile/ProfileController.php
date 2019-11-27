@@ -50,7 +50,7 @@ class ProfileController extends AbstractController
     {
         try {
             $result = $this->profileService->isFilledProfile($request->get('id'));
-            return new JsonResponse($result, 201);
+            return new JsonResponse($result, 200);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
         }
