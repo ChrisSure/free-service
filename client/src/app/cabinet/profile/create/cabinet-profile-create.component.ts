@@ -16,7 +16,6 @@ import {ProfileDto} from "../../../dtos/profile/profile-create-dto";
     templateUrl: './cabinet-profile-create.component.html'
 })
 export class CabinetProfileCreateComponent implements OnInit {
-
     createProfileForm: FormGroup;
     regions: Region[];
     cities: City[];

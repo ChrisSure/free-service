@@ -112,5 +112,17 @@ export class ProfileService {
         ).pipe(map((response: Response) => response));
     }
 
+    /**
+     * Change user password
+     * @param {string} password
+     * @return {Observable<any>}
+     */
+    public changePassword(password: string): Observable<any>
+    {
+        return this.http.post(
+            this.baseUrl + '/cabinet/profile/' + this.userId + '/change-password', this.urlService.getFormUrlEncoded({password: password}), { headers: this.headers }
+        ).pipe(map((response: Response) => response));
+    }
+
 
 }

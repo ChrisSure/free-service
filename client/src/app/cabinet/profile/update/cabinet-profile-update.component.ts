@@ -77,7 +77,6 @@ export class CabinetProfileUpdateComponent implements OnInit {
             this.profileService.CreateProfile.emit(res);
             this.router.navigate(['/cabinet']);
         },err => {
-            console.log(err);
             this.messageService.setErrorMessage(err);
         });
     }

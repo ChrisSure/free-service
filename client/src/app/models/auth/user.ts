@@ -4,8 +4,8 @@ export class User {
         public email: string,
         public password: string,
         public profile: number,
-        public roles: [],
-        public social: [],
+        public roles: object,
+        public social: object,
         public status: string
     ) { }
 }

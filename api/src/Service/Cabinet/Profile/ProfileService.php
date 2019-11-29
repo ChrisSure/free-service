@@ -65,7 +65,7 @@ class ProfileService
     }
 
     /**
-     * Get profile by user_id
+     * Get profile by user id
      * @param $user_id
      * @return string
      */

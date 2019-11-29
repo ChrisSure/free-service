@@ -119,7 +119,6 @@ class ProfileController extends AbstractController
         }
     }
 
-
     /**
      * Change user email
      * @Route("/profile/{id}/change-email", name="cabinet_change_email",  methods={"POST"})
