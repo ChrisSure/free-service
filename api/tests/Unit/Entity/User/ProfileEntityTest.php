@@ -35,7 +35,7 @@ class ProfileEntityTest extends TestCase
         $this->assertEquals($about, $profile->getAbout());
         $this->assertEquals($phone, $profile->getPhone());
         $this->assertEquals($sex, $profile->getSex());
-        $this->assertEquals(date_create($birthday), $profile->getBirthday());
+        $this->assertEquals($birthday, $profile->getBirthday());
         $this->assertEquals(gettype($user), gettype($profile->getUser()));
         $this->assertEquals(gettype($city), gettype($profile->getCity()));
 

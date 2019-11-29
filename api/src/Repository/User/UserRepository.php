@@ -5,6 +5,7 @@ namespace App\Repository\User;
 use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,50 @@ class UserRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    /**
+     * Get user
+     * @param $id
+     * @return User
+     */
+    public function get($id): User
+    {
+        $user = $this->find($id);
+        if (!$user)
+            throw new NotFoundHttpException('User doesn\'t exist.');
+        return $user;
+    }
+
+    /**
+     * Get user by email
+     * @param $email
+     * @return User
+     */
+    public function getByEmail($email): User
+    {
+        $user = $this->findOneBy([
+            'email' => $email
+        ]);
+        if (!$user)
+            throw new NotFoundHttpException('User doesn\'t exist.');
+        return $user;
+    }
+
+    /**
+     * Get user by token
+     * @param array $data
+     * @return User
+     */
+    public function getByToken(array $data): User
+    {
+        $user = $this->findOneBy([
+            'id' => $data['id'],
+            'token' => $data['token']
+        ]);
+        if (!$user)
+            throw new NotFoundHttpException('You have missed data.');
+        return $user;
     }
 
     /**

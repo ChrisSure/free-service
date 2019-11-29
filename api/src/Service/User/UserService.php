@@ -49,10 +49,7 @@ class UserService
         if ($check_email)
             throw new UniqueException('That email have already used.');
 
-        $user = $this->userRepository->find($id);
-        if (!$user)
-            throw new NotFoundHttpException('User doesn\'t exist.');
-
+        $user = $this->userRepository->get($id);
         $user->setEmail($data['email'])->onPreUpdate();
         $this->userRepository->save($user);
     }
@@ -65,10 +62,7 @@ class UserService
      */
     public function changePassword(array $data, $id): void
     {
-        $user = $this->userRepository->find($id);
-        if (!$user)
-            throw new NotFoundHttpException('User doesn\'t exist.');
-
+        $user = $this->userRepository->get($id);
         $user->setPassword($this->passService->hashPassword($user, $data['password']))->onPreUpdate();
         $this->userRepository->save($user);
     }

@@ -50,10 +50,7 @@ class CityService
      */
     public function getCitiesByRegionId($region_id): string
     {
-        $region = $this->regionRepository->find($region_id);
-        if (!$region)
-            throw new NotFoundHttpException('Region doesn\'t exist.');
-
+        $region = $this->regionRepository->get($region_id);
         return $this->serializeService->serialize($this->cityRepository->findBy(['region' => $region]));
     }
 }

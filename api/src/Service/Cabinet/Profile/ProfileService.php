@@ -71,14 +71,8 @@ class ProfileService
      */
     public function getProfileByUserId($user_id): string
     {
-        $user = $this->userRepository->find($user_id);
-        if (!$user)
-            throw new NotFoundHttpException('User doesn\'t exist.');
-
-        $profile = $this->profileRepository->findOneBy(['user' => $user]);
-        if (!$profile)
-            throw new NotFoundHttpException('Profile doesn\'t exist.');
-
+        $user = $this->userRepository->get($user_id);
+        $profile = $this->profileRepository->getByUser($user);
         return $this->serializeService->serialize($profile);
     }
 
@@ -89,16 +83,10 @@ class ProfileService
      */
     public function createdProfile(array $data): void
     {
-        $user = $this->userRepository->find($data['user']);
-        if (!$user)
-            throw new NotFoundHttpException('User doesn\'t exist.');
-
+        $user = $this->userRepository->get($data['user']);
+        $city = $this->cityRepository->get($data['city']);
         if ($this->profileRepository->findOneBy(['user' => $user]))
             throw new NotAllowException('You have already filled your profile.');
-
-        $city = $this->cityRepository->find($data['city']);
-        if (!$city)
-            throw new NotFoundHttpException('City doesn\'t exist.');
 
         $profile = new Profile();
         $profile->setFirstname($data['firstname'])->setLastname($data['lastname'])
@@ -121,17 +109,9 @@ class ProfileService
      */
     public function updateProfile(array $data, $id): void
     {
-        $user = $this->userRepository->find($data['user']);
-        if (!$user)
-            throw new NotFoundHttpException('User doesn\'t exist.');
-
-        $city = $this->cityRepository->find($data['city']);
-        if (!$city)
-            throw new NotFoundHttpException('City doesn\'t exist.');
-
-        $profile = $this->profileRepository->find($id);
-        if (!$profile)
-            throw new NotFoundHttpException('Profile doesn\'t exist.');
+        $user = $this->userRepository->get($data['user']);
+        $city = $this->cityRepository->get($data['city']);
+        $profile = $this->profileRepository->get($id);
 
         $profile->setFirstname($data['firstname'])->setLastname($data['lastname'])
             ->setSurname(isset($data['surname']) ? $data['surname'] : null)->setBirthday($data['birthday'])

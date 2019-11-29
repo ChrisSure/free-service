@@ -81,13 +81,7 @@ class AuthService
      */
     public function confirmUser(array $data): void
     {
-        $user = $this->userRepository->findOneBy([
-            'id' => $data['id'],
-            'token' => $data['token']
-        ]);
-        if (!$user)
-            throw new NotFoundHttpException('You have missed data.');
-
+        $user = $this->userRepository->getByToken($data);
         $user->setStatus(User::$STATUS_ACTIVE);
         $user->setToken(null);
         $user->onPreUpdate();
@@ -103,12 +97,7 @@ class AuthService
     {
         $token = $this->passService->generateToken();
 
-        $user = $this->userRepository->findOneBy([
-            'email' => $data['email']
-        ]);
-        if (!$user)
-            throw new NotFoundHttpException('User doesn\'t exist.');
-
+        $user = $this->userRepository->getByEmail($data['email']);
         $user->setToken($token)->onPreUpdate();
         $this->userRepository->save($user);
 
@@ -122,13 +111,7 @@ class AuthService
      */
     public function checkUserToken(array $data): void
     {
-        $user = $this->userRepository->findOneBy([
-            'id' => $data['id'],
-            'token' => $data['token']
-        ]);
-        if (!$user)
-            throw new NotFoundHttpException('You have missed data.');
-
+        $user = $this->userRepository->getByToken($data);
         $user->setToken(null);
         $user->onPreUpdate();
         $this->userRepository->save($user);
@@ -142,10 +125,7 @@ class AuthService
      */
     public function setNewPassword(array $data, $id): void
     {
-        $user = $this->userRepository->find($id);
-        if (!$user)
-            throw new NotFoundHttpException('User doesn\'t exist.');
-
+        $user = $this->userRepository->get($id);
         $user->setPassword($this->passService->hashPassword($user, $data['password']))
             ->setToken(null)->onPreUpdate();
         $this->userRepository->save($user);
