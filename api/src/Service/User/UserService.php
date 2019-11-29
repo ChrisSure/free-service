@@ -41,10 +41,9 @@ class UserService
      * Change user email
      * @param array $data
      * @param int $id
-     * @param int $current_user_id
      * @return void
      */
-    public function changeEmail(array $data, $id, $current_user_id): void
+    public function changeEmail(array $data, $id): void
     {
         $check_email = $this->userRepository->GetUserByEmailAndLikeId($data, $id);
         if ($check_email)
@@ -62,10 +61,9 @@ class UserService
      * Change user password
      * @param array $data
      * @param int $id
-     * @param int $current_user_id
      * @return void
      */
-    public function changePassword(array $data, $id, $current_user_id): void
+    public function changePassword(array $data, $id): void
     {
         $user = $this->userRepository->find($id);
         if (!$user)

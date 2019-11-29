@@ -134,7 +134,7 @@ class AuthController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function confirm_password(Request $request): JsonResponse
+    public function confirmPassword(Request $request): JsonResponse
     {
         $data = $request->query->all();
 
@@ -153,7 +153,7 @@ class AuthController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function new_password(Request $request): JsonResponse
+    public function newPassword(Request $request): JsonResponse
     {
         $data = $request->request->all();
 

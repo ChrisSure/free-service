@@ -19,4 +19,11 @@ export class MessageService {
         this.apiMessage = result;
         this.apiColor = "success";
     }
+
+    public setWarningMessage(result: string): void
+    {
+        this.apiMessage = result;
+        this.apiColor = "warning";
+    }
+
 }

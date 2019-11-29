@@ -12,6 +12,7 @@ use App\Exceptions\NotAllowException;
 use App\Repository\Data\CityRepository;
 use App\Repository\User\ProfileRepository;
 use App\Repository\User\UserRepository;
+use App\Service\Helpers\SerializeService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -35,11 +36,22 @@ class ProfileService
      */
     private $cityRepository;
 
-    public function __construct(ProfileRepository $profileRepository, UserRepository $userRepository, CityRepository $cityRepository)
+    /**
+     * @var SerializeService
+     */
+    private $serializeService;
+
+    public function __construct(
+        ProfileRepository $profileRepository,
+        UserRepository $userRepository,
+        CityRepository $cityRepository,
+        SerializeService $serializeService
+    )
     {
         $this->profileRepository = $profileRepository;
         $this->userRepository = $userRepository;
         $this->cityRepository = $cityRepository;
+        $this->serializeService = $serializeService;
     }
 
     /**
@@ -52,18 +64,37 @@ class ProfileService
         return ($this->profileRepository->findOneBy(['user' => $id])) ? true : false;
     }
 
+    /**
+     * Get profile by user_id
+     * @param $user_id
+     * @return string
+     */
+    public function getProfileByUserId($user_id): string
+    {
+        $user = $this->userRepository->find($user_id);
+        if (!$user)
+            throw new NotFoundHttpException('User doesn\'t exist.');
+
+        $profile = $this->profileRepository->findOneBy(['user' => $user]);
+        if (!$profile)
+            throw new NotFoundHttpException('Profile doesn\'t exist.');
+
+        return $this->serializeService->serialize($profile);
+    }
 
     /**
      * Created user profile
      * @param array $data
-     * @param int $current_user_id
      * @return void
      */
-    public function createdProfile(array $data, $current_user_id): void
+    public function createdProfile(array $data): void
     {
         $user = $this->userRepository->find($data['user']);
         if (!$user)
             throw new NotFoundHttpException('User doesn\'t exist.');
+
+        if ($this->profileRepository->findOneBy(['user' => $user]))
+            throw new NotAllowException('You have already filled your profile.');
 
         $city = $this->cityRepository->find($data['city']);
         if (!$city)
@@ -86,10 +117,9 @@ class ProfileService
      * Update user profile
      * @param array $data
      * @param int $id
-     * @param int $current_user_id
      * @return void
      */
-    public function updateProfile(array $data, $id, $current_user_id): void
+    public function updateProfile(array $data, $id): void
     {
         $user = $this->userRepository->find($data['user']);
         if (!$user)

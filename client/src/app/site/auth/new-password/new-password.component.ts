@@ -40,7 +40,7 @@ export class NewPasswordComponent implements OnInit {
      */
     constructor(
         private authService: AuthService,
-        comparePasswordService: ComparePasswordService,
+        private comparePasswordService: ComparePasswordService,
         private actRoute: ActivatedRoute,
         public messageService: MessageService,
         private userService: UserInfoService

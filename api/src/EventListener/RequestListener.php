@@ -28,9 +28,11 @@ class RequestListener
         }
 
         if ($event->getRequest()->server->get('HTTP_AUTHORIZATION')) {
-            $userId = $this->tokenStorage->getToken()->getUser()->getId();
-            if ($event->getRequest()->get('id') != $userId) {
-                throw new NotAllowException('You don\'t allow this action.');
+            if ($event->getRequest()->get('id') || $event->getRequest()->get('user')) {
+                $userId = $this->tokenStorage->getToken()->getUser()->getId();
+                if ($event->getRequest()->get('id') != $userId && $event->getRequest()->get('user') != $userId) {
+                    throw new NotAllowException('You don\'t allow this action.');
+                }
             }
         }
     }
