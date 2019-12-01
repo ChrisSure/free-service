@@ -16,18 +16,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class PasswordHashServiceTest extends TestCase
 {
-    private $passwordService;
-
-    protected function setUp(): void
-    {
-        $this->passwordService = new PasswordHashService($this->createMock(UserPasswordEncoderInterface::class));
-    }
-
-    public function testGenerateToken()
-    {
-        $this->assertEquals('string', gettype($this->passwordService->generateToken()));
-    }
-
     /*public function testHashPassword()
     {
         $user = (new User())->setPassword('123')->setEmail('t@t.ua');

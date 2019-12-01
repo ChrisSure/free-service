@@ -89,7 +89,7 @@ class AuthController extends AbstractController
 
     /**
      * Confirm user email
-     * @Route("/confirm", name="auth_confirm",  methods={"GET"})
+     * @Route("/confirm/{user_id}", name="auth_confirm",  methods={"GET"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -98,7 +98,7 @@ class AuthController extends AbstractController
         $data = $request->query->all();
 
         try {
-            $this->authService->confirmUser($data);
+            $this->authService->confirmUser($data, $request->get('user_id'));
             return new JsonResponse("Congratulation. You can sign in.", 201);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
@@ -130,7 +130,7 @@ class AuthController extends AbstractController
 
     /**
      * Check user token for new password
-     * @Route("/check-token", name="auth_check_token",  methods={"GET"})
+     * @Route("/check-token/{user_id}", name="auth_check_token",  methods={"GET"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -139,7 +139,7 @@ class AuthController extends AbstractController
         $data = $request->query->all();
 
         try {
-            $this->authService->checkUserToken($data);
+            $this->authService->checkUserToken($data, $request->get('user_id'));
             return new JsonResponse("Success data.", 200);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage()], 500);
