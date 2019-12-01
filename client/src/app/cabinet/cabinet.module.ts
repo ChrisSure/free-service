@@ -8,7 +8,7 @@ import { CabinetHomeComponent } from "./cabinet-home/cabinet-home.component";
 import { CabinetProfileCreateComponent } from "./profile/create/cabinet-profile-create.component";
 import { CabinetProfileUpdateComponent } from "./profile/update/cabinet-profile-update.component";
 import { CabinetChangePasswordComponent } from "./profile/change-password/cabinet-change-password.component";
-
+import { McBreadcrumbsModule } from 'ngx-breadcrumbs';
 
 
 @NgModule({
@@ -24,7 +24,8 @@ import { CabinetChangePasswordComponent } from "./profile/change-password/cabine
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
-        CabinetRoutingModule
+        CabinetRoutingModule,
+        McBreadcrumbsModule.forRoot()
     ],
     providers: [],
     bootstrap: []

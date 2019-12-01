@@ -12,11 +12,11 @@ import { CabinetChangePasswordComponent } from "./profile/change-password/cabine
 
 const routesCabinet: Routes = [
     {
-        path: '', component: CabinetPanelComponent, canActivate: [CabinetGuard], children: [
-            { path: '', component: CabinetHomeComponent  },
-            { path: 'profile/create', component: CabinetProfileCreateComponent},
-            { path: 'profile/update', component: CabinetProfileUpdateComponent},
-            { path: 'profile/change-password', component: CabinetChangePasswordComponent},
+        path: '', component: CabinetPanelComponent, canActivate: [CabinetGuard], data: { breadcrumbs: true, text: 'Cabinet' },  children: [
+            { path: '', component: CabinetHomeComponent},
+            { path: 'profile/create', component: CabinetProfileCreateComponent, data: { breadcrumbs: true, text: 'Create profile' }},
+            { path: 'profile/update', component: CabinetProfileUpdateComponent, data: { breadcrumbs: true, text: 'Update profile' }},
+            { path: 'profile/change-password', component: CabinetChangePasswordComponent, data: { breadcrumbs: true, text: 'Change password' }},
         ]
     }
 ];
