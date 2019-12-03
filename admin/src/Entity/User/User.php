@@ -2,7 +2,9 @@
 
 namespace App\Entity\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -77,10 +79,35 @@ class User implements UserInterface
     public static $ROLE_ADMIN = "ROLE_ADMIN";
     public static $ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";
 
+    /**
+     * List of roles
+     * @return array
+     */
+    public static function rolesAdminList(): array
+    {
+        return [
+            'Moderator' => self::$ROLE_MODERATOR,
+            'Admin' => self::$ROLE_ADMIN,
+            'Super admin' => self::$ROLE_SUPER_ADMIN
+        ];
+    }
+
     public static $STATUS_NEW = "new";
     public static $STATUS_ACTIVE = "active";
     public static $STATUS_BLOCKED = "blocked";
 
+    /**
+     * List of statuses
+     * @return array
+     */
+    public static function statusList(): array
+    {
+        return [
+            'New' => self::$STATUS_NEW,
+            'Active' => self::$STATUS_ACTIVE,
+            'Blocked' => self::$STATUS_BLOCKED
+        ];
+    }
 
     /**
      * @return int|null
@@ -91,9 +118,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return Profile
+     * @return ?Profile
      */
-    public function getProfile(): Profile
+    public function getProfile(): ?Profile
     {
         return $this->profile;
     }
@@ -109,9 +136,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return SocialUser
+     * @return PersistentCollection
      */
-    public function getSocial(): SocialUser
+    public function getSocial(): PersistentCollection
     {
         return $this->social;
     }
@@ -230,6 +257,21 @@ class User implements UserInterface
     {
         $this->updated_at = new \DateTime("now");
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getcreated_at()
+    {
+        return $this->created_at;
+    }
+    /**
+     * @return string
+     */
+    public function getupdated_at()
+    {
+        return $this->updated_at->format('Y-m-d');
     }
 
 

@@ -191,11 +191,11 @@ class Profile
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getBirthday(): \DateTime
+    public function getBirthday(): string
     {
-        return $this->birthday;
+        return $this->birthday->format('Y-m-d');
     }
 
     /**

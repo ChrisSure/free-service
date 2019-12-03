@@ -1,0 +1,9 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Region edit{% endblock %}
+
+{% block body %}
+    <h1>Edit Region</h1>
+    <a href="{{ path('data_region_index') }}" class="btn btn-primary mb-2">back to list</a>
+    {{ include('admin/data/region/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

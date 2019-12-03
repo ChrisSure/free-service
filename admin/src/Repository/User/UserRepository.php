@@ -5,6 +5,8 @@ namespace App\Repository\User;
 use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +21,48 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Get user
+     * @param $id
+     * @return User
+     */
+    public function get($id): User
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $user = $this->find($id);
+        if (!$user)
+            throw new NotFoundHttpException('User doesn\'t exist.');
+        return $user;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?User
+    /**
+     * Return list of admins with filtration and sortable
+     * @param string $sort
+     * @param array $filter|null
+     * @return mixed
+     */
+    public function findAllAdmin($sort, array $filter = null): array
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $sort = ($sort == 'asc') ? 'ASC' : 'DESC';
+        $db = $this->createQueryBuilder('u')
+            ->where('u.roles LIKE :roleModer')->orWhere('u.roles LIKE :roleAdmin')->orWhere('u.roles LIKE :roleSAdmin')
+            ->setParameter('roleModer', '%"'.User::$ROLE_MODERATOR.'"%')
+            ->setParameter('roleAdmin', '%"'.User::$ROLE_ADMIN.'"%')
+            ->setParameter('roleSAdmin', '%"'.User::$ROLE_SUPER_ADMIN.'"%')
+            ->orderBy('u.created_at', $sort);
+
+        if ($filter != null) {
+            if (array_key_exists('email', $filter) && $filter['email'] != "") {
+                $db->andWhere('u.email LIKE :email')->setParameter('email', "%".$filter['email']."%");
+            }
+            if (array_key_exists('status', $filter) && $filter['status'] != "") {
+                $db->andWhere('u.status = :status')->setParameter('status', $filter['status']);
+            }
+            if (array_key_exists('role', $filter) && $filter['role'] != "") {
+                $db->andWhere('u.roles LIKE :role')->setParameter('role', '%"'.$filter['role'].'"%');
+            }
+        }
+
+        return $db->getQuery()->getResult();
     }
-    */
+
 }

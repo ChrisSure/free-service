@@ -16,18 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/", name="app_home")
+     * @Route("/", name="home")
      */
     public function home(): Response
     {
         return $this->render('admin/home.html.twig');
     }
 
-    /**
-     * @Route("/admin", name="app_admin")
-     */
-    public function admin(): Response
-    {
-        return new Response("Admin!");
-    }
 }
