@@ -29,15 +29,6 @@ class PasswordHashService
     }
 
     /**
-     * Generate string token
-     * @return string
-     */
-    public function generateToken(): string
-    {
-        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
-    }
-
-    /**
      * Hash password
      * @param User $user
      * @param string $password

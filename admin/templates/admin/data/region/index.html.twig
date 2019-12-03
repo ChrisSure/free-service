@@ -1,0 +1,28 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Regions{% endblock %}
+
+{% block body %}
+    <h1>Region index</h1>
+    <a href="{{ path('data_region_new') }}" class="btn btn-success mb-4">Create new</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for region in regions %}
+            <tr>
+                <td>{{ region.id }}</td>
+                <td><a href="{{ path('data_region_show', {'id': region.id}) }}" class="show_link">{{ region.name }}</a></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

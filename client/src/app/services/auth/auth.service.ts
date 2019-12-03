@@ -96,7 +96,7 @@ export class AuthService {
     public confirmRegister(id: number, token:string): Observable<any>
     {
         return this.http.get(
-            this.baseUrl + '/auth/confirm?id=' + id + '&token=' + token, { headers: this.headers }
+            this.baseUrl + '/auth/confirm/' + id + '?token=' + token, { headers: this.headers }
         ).pipe(map((response: Response) => response));
     }
 
@@ -121,7 +121,7 @@ export class AuthService {
     public checkToken(id: number, token:string): Observable<any>
     {
         return this.http.get(
-            this.baseUrl + '/auth/check-token?id=' + id + '&token=' + token, { headers: this.headers }
+            this.baseUrl + '/auth/check-token/' + id + '?token=' + token, { headers: this.headers }
         ).pipe(map((response: Response) => response));
     }
 

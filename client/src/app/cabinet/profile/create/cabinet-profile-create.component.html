@@ -1,0 +1,99 @@
+<h3 class="text-center">Create Profile</h3>
+
+<div *ngIf="messageService.apiMessage != '' && messageService.apiColor == 'danger'" class="alert alert-{{ messageService.apiColor }}" role="alert">
+    {{ messageService.apiMessage }}
+</div>
+
+<form [formGroup]="createProfileForm" (ngSubmit)="createProfile()">
+    <div class="form-group">
+        <label for="profile_firsname">Firstname</label>
+        <input type="text" class="form-control" name="firstname" formControlName="firstname" id="profile_firsname" aria-describedby="emailHelp" placeholder="Enter firstname">
+        <span class="form-help-text" *ngIf="createProfileForm.get('firstname').invalid && createProfileForm.get('firstname').dirty">
+            <span *ngIf="createProfileForm.get('firstname')['errors']['required']">Field can`t be empty.<br /></span>
+            <span *ngIf="createProfileForm.get('firstname')['errors']['minlength']">Field must be min 2 character.<br /></span>
+            <span *ngIf="createProfileForm.get('firstname')['errors']['maxlength']">Field must be max 255 character.<br /></span>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label for="profile_lastname">Lastname</label>
+        <input type="text" class="form-control" name="lastname" formControlName="lastname" id="profile_lastname" aria-describedby="emailHelp" placeholder="Enter lastname">
+        <span class="form-help-text" *ngIf="createProfileForm.get('lastname').invalid && createProfileForm.get('lastname').dirty">
+            <span *ngIf="createProfileForm.get('lastname')['errors']['required']">Field can`t be empty.<br /></span>
+            <span *ngIf="createProfileForm.get('lastname')['errors']['minlength']">Field must be min 2 character.<br /></span>
+            <span *ngIf="createProfileForm.get('lastname')['errors']['maxlength']">Field must be max 255 character.<br /></span>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label for="profile_surname">Surname</label>
+        <input type="text" class="form-control" name="surname" formControlName="surname" id="profile_surname" aria-describedby="emailHelp" placeholder="Enter surname">
+        <span class="form-help-text" *ngIf="createProfileForm.get('surname').invalid && createProfileForm.get('surname').dirty">
+            <span *ngIf="createProfileForm.get('surname')['errors']['minlength']">Field must be min 2 character.<br /></span>
+            <span *ngIf="createProfileForm.get('surname')['errors']['maxlength']">Field must be max 255 character.<br /></span>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label for="profile_region">Region</label>
+        <select id="profile_region" name="region" (change)="onRegionChange($event.target.value)" formControlName="region" class="form-control">
+            <option *ngFor="let region of regions" value="{{region.id}}">{{region.name}}</option>
+        </select>
+        <span class="form-help-text" *ngIf="createProfileForm.get('region').invalid && createProfileForm.get('region').touched">
+            <span *ngIf="createProfileForm.get('region')['errors']['required']">Field can`t be empty.</span>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label for="profile_city">City</label>
+        <select id="profile_city" name="city" formControlName="city" class="form-control">
+            <option *ngFor="let city of cities" value="{{city.id}}">{{city.name}}</option>
+        </select>
+        <span class="form-help-text" *ngIf="createProfileForm.get('city').invalid && createProfileForm.get('city').touched">
+            <span *ngIf="createProfileForm.get('city')['errors']['required']">Field can`t be empty.</span>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label for="profile_phone">Phone</label>
+        <input type="text" class="form-control" name="phone" formControlName="phone" id="profile_phone" placeholder="Enter phone (example 0981111111)">
+        <span class="form-help-text" *ngIf="createProfileForm.get('phone').invalid && createProfileForm.get('phone').dirty">
+            <span *ngIf="createProfileForm.get('phone')['errors']['required']">Field can`t be empty.<br /></span>
+            <span *ngIf="createProfileForm.get('phone')['errors']['pattern']">Field must be pattern 0981111111.<br /></span>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label>Sex</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="sex" formControlName="sex" id="radioSex1" value="1" checked>
+            <label class="form-check-label" for="radioSex1">
+                Male
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="sex" formControlName="sex" id="radioSex2" value="0">
+            <label class="form-check-label" for="radioSex2">
+                Female
+            </label>
+        </div>
+        <span class="form-help-text" *ngIf="createProfileForm.get('sex').invalid && createProfileForm.get('sex').dirty">
+            <span *ngIf="createProfileForm.get('sex')['errors']['required']">Field can`t be empty.<br /></span>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label for="profile_birthday">Birthday</label>
+        <input type="date" class="form-control" id="profile_birthday" formControlName="birthday" data-date-format="DD.MM.YYYY" name="birthday" />
+        <span class="form-help-text" *ngIf="createProfileForm.get('birthday').invalid && createProfileForm.get('birthday').dirty">
+            <span *ngIf="createProfileForm.get('birthday')['errors']['required']">Field can`t be empty.<br /></span>
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label for="profile_about">About</label>
+        <textarea type="text" class="form-control" name="about" formControlName="about" id="profile_about" placeholder="Enter about yourself"></textarea>
+    </div>
+
+    <button type="submit" [disabled]="createProfileForm.invalid" class="btn btn-outline-success">Submit</button>
+</form>

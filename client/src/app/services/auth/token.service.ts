@@ -2,6 +2,7 @@ import { JwtToken } from '../../models/auth/jwt-token';
 import * as jwt_decode from 'jwt-decode';
 import { Injectable, EventEmitter, Output } from '@angular/core';
 import { UserInfoService } from './user-info.service';
+import { AuthService } from "./auth.service";
 
 @Injectable()
 export class TokenService {
@@ -17,10 +18,14 @@ export class TokenService {
     @Output() AccessTokenExpired: EventEmitter<any> = new EventEmitter();
 
     /**
+     * @type {EventEmitter<any>}
+     */
+    @Output() ChangeToken: EventEmitter<any> = new EventEmitter();
+
+    /**
      * @param {UserInfoService} userInfoService
      */
-    constructor(private userInfoService: UserInfoService) {
-    }
+    constructor(private userInfoService: UserInfoService) {}
 
     /**
      * Write token to localStorage
@@ -33,6 +38,7 @@ export class TokenService {
         );
         localStorage.setItem(this.accessToken, token.accessToken);
         this.userInfoService.SaveUserInfo(jwt_decode(token.accessToken));
+        this.ChangeToken.emit('Token change');
     }
 
     /**

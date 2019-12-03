@@ -13,6 +13,9 @@ import { AuthServiceConfig } from 'angular-6-social-login';
 import { GoogleLoginProvider, FacebookLoginProvider, AuthService } from 'angular-6-social-login';
 import { UrlHelperService } from "./services/helpers/url-helper.service";
 import { MessageService } from "./services/helpers/message.service";
+import { ProfileService } from "./services/profile/profile.service";
+import { RegionService } from "./services/data/region.service";
+import { CityService } from "./services/data/city.service";
 
 
 export function socialConfigs() {
@@ -49,6 +52,9 @@ export function socialConfigs() {
       ComparePasswordService,
       UrlHelperService,
       MessageService,
+      ProfileService,
+      RegionService,
+      CityService,
       AuthService,
       {
           provide: AuthServiceConfig,

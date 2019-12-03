@@ -36,6 +36,8 @@ services:
             dockerfile: ${PWD}/api/docker/php-fpm.docker
         volumes:
             - ./api:/app
+        environment:
+            - "CORS_ALLOW_ORIGIN=http://work-profession.space"
         depends_on:
             - service-mysql
     ### Database

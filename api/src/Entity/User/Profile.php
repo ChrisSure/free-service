@@ -149,9 +149,9 @@ class Profile
         return $this;
     }
 
-    public function getBirthday(): \DateTime
+    public function getBirthday(): string
     {
-        return $this->birthday;
+        return $this->birthday->format('Y-m-d');
     }
 
     public function setBirthday($birthday): self

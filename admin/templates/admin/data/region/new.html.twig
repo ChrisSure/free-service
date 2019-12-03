@@ -1,0 +1,11 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Region create{% endblock %}
+
+{% block body %}
+    <h1>Create new Region</h1>
+
+    {{ include('admin/data/region/_form.html.twig') }}
+
+    <a href="{{ path('data_region_index') }}" class="btn btn-primary mt-2">back to list</a>
+{% endblock %}

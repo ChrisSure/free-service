@@ -30,15 +30,17 @@ yarn-watch:
 
 ### Deploy production
 deploy-production:
-	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'rm -rf docker-compose.yml'
+	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'sudo rm -rf docker-compose.yml'
 	scp -o StrictHostKeyChecking=no -P 22 docker-compose-production.yml 185.65.244.241:docker-compose.yml
-	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'rm -rf client/src/app/globals.ts'
+	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'sudo rm -rf client/src/app/globals.ts'
 	scp -o StrictHostKeyChecking=no -P 22 client/src/app/globals-production.ts 185.65.244.241:client/src/app/globals.ts
-	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'docker-compose --build -d'
+	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'docker-compose build'
+	ssh -o StrictHostKeyChecking=no 185.65.244.241 -p 22 'docker-compose up -d'
 
 
 
 ### docker-compose run --rm admin-php-fpm
+### docker-compose run --rm api-php-fpm
 ### docker-compose run --rm admin-php-fpm php bin/console make:migration
 ### docker-compose run --rm admin-php-fpm php bin/console doctrine:migrations:migrate
 ### docker-compose run --rm admin-php-fpm php bin/console doctrine:fixtures:load

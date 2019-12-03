@@ -8,12 +8,16 @@
 
 namespace App\Service\Auth;
 
+use App\Dto\User\TokenDto;
 use App\Entity\User\User;
 use App\Exceptions\NotAllowException;
+use App\Exceptions\TokenException;
 use App\Exceptions\UniqueException;
 use App\Repository\User\UserRepository;
 use App\Service\Email\MailService;
 use App\Service\Helpers\PasswordHashService;
+use App\Service\Helpers\SerializeService;
+use App\Service\Helpers\TokenService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,12 +46,25 @@ class AuthService
      */
     private $userRepository;
 
-    public function __construct(PasswordHashService $passService, JwtService $jwtService, MailService $mailService, UserRepository $userRepository)
+    /**
+     * @var SerializeService
+     */
+    private $serialize;
+
+    /**
+     * @var TokenService
+     */
+    private $tokenService;
+
+
+    public function __construct(PasswordHashService $passService, JwtService $jwtService, MailService $mailService, UserRepository $userRepository, TokenService $tokenService, SerializeService $serialize)
     {
         $this->passService = $passService;
         $this->jwtService = $jwtService;
         $this->mailService = $mailService;
         $this->userRepository = $userRepository;
+        $this->serialize = $serialize;
+        $this->tokenService = $tokenService;
     }
 
     /**
@@ -62,31 +79,35 @@ class AuthService
             throw new UniqueException("User who has that email already isset.");
 
         $user = new User();
-        $token = $this->passService->generateToken();
+        $token = $this->tokenService->generateToken();
         $user
             ->setEmail($data['email'])
             ->setPassword($this->passService->hashPassword($user, $data['password']))
             ->setRoles([User::$ROLE_USER])
             ->setStatus(User::$STATUS_NEW)
-            ->setToken($token)
+            ->setToken($this->serialize->serialize($token))
             ->onPrePersist()->onPreUpdate();
         $this->userRepository->save($user);
-        $this->mailService->sendCheckRegistration($user, $token);
+        $this->mailService->sendCheckRegistration($user, $token->getToken());
     }
 
     /**
      * Confirm registration user
      * @param array $data
+     * @param int $id
      * @return void
      */
-    public function confirmUser(array $data): void
+    public function confirmUser(array $data, $id): void
     {
-        $user = $this->userRepository->findOneBy([
-            'id' => $data['id'],
-            'token' => $data['token']
-        ]);
-        if (!$user)
-            throw new NotFoundHttpException('You have missed data.');
+        $user = $this->userRepository->get($id);
+        $tokenObject = $this->serialize->deserialize($user->getToken(), TokenDto::class, 'json');
+
+        if ($tokenObject->getToken() != $data['token']) {
+            throw new TokenException('You have missed data.');
+        }
+        if ($tokenObject->getExpired() <= time()) {
+            throw new TokenException('Token time has overed.');
+        }
 
         $user->setStatus(User::$STATUS_ACTIVE);
         $user->setToken(null);
@@ -101,33 +122,36 @@ class AuthService
      */
     public function forgetPassword(array $data): void
     {
-        $token = $this->passService->generateToken();
+        $user = $this->userRepository->getByEmail($data['email']);
+        if ($user->getToken() != null) {
+            throw new TokenException('You change your password too often.');
+        }
 
-        $user = $this->userRepository->findOneBy([
-            'email' => $data['email']
-        ]);
-        if (!$user)
-            throw new NotFoundHttpException('User doesn\'t exist.');
+        $token = $this->tokenService->generateToken();
 
-        $user->setToken($token)->onPreUpdate();
+        $user->setToken($this->serialize->serialize($token))->onPreUpdate();
         $this->userRepository->save($user);
 
-        $this->mailService->sendForgetPassword($user, $token);
+        $this->mailService->sendForgetPassword($user, $token->getToken());
     }
 
     /**
      * Check user token
      * @param array $data
+     * @param int $id
      * @return void
      */
-    public function checkUserToken(array $data): void
+    public function checkUserToken(array $data, $id): void
     {
-        $user = $this->userRepository->findOneBy([
-            'id' => $data['id'],
-            'token' => $data['token']
-        ]);
-        if (!$user)
-            throw new NotFoundHttpException('You have missed data.');
+        $user = $this->userRepository->get($id);
+        $tokenObject = $this->serialize->deserialize($user->getToken(), TokenDto::class, 'json');
+
+        if ($tokenObject->getToken() != $data['token']) {
+            throw new NotAllowException('You have missed data.');
+        }
+        if ($tokenObject->getExpired() <= time()) {
+            throw new NotAllowException('Token time has overed.');
+        }
 
         $user->setToken(null);
         $user->onPreUpdate();
@@ -142,10 +166,7 @@ class AuthService
      */
     public function setNewPassword(array $data, $id): void
     {
-        $user = $this->userRepository->find($id);
-        if (!$user)
-            throw new NotFoundHttpException('User doesn\'t exist.');
-
+        $user = $this->userRepository->get($id);
         $user->setPassword($this->passService->hashPassword($user, $data['password']))
             ->setToken(null)->onPreUpdate();
         $this->userRepository->save($user);

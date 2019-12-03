@@ -1,0 +1,14 @@
+<a{% for attr, value  in options %} {{ attr }}="{{ value }}"{% endfor %} style="color: #000;">
+{{ title|raw }}
+<span class="pull-right ml-1">
+        {% if sorted %}
+            {% if direction == 'desc' %}
+                <span class="badge badge-success">Asc</span>
+            {% else %}
+                <span class="badge badge-success">Desc</span>
+            {% endif %}
+        {% else %}
+            <span class="badge badge-success">Desc</span>
+        {% endif %}
+    </span>
+</a>
