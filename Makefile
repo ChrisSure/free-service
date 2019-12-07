@@ -1,6 +1,7 @@
 up: docker-up
 down: docker-down
 build: docker-build
+build-nc: docker-build-no-cache
 
 adut: docker-admin-unit-tests
 aput: docker-api-unit-tests
@@ -14,6 +15,8 @@ docker-down:
 	docker-compose down --remove-orphans
 docker-build:
 	docker-compose build
+docker-build-no-cache:
+	docker-compose build --no-cache
 
 ### Run unit tests
 docker-admin-unit-tests:
@@ -47,5 +50,4 @@ deploy-production:
 ### curl -X POST -H "Content-Type: application/json" http://localhost:9999/auth/login -d "{\"email\":\"user@gmail.com\",\"password\":\"123\"}"
 ### npm install rxjs@6.0.0 --save
 ### --disable-host-check to package.json start
-### docker-compose run --rm admin-php-fpm php php bin/phpunit]
-### docker-compose build --no-cache
+### docker-compose run --rm admin-php-fpm php php bin/phpunit
