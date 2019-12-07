@@ -7,10 +7,11 @@ services:
             dockerfile: ${PWD}/admin/docker/nginx.docker
         volumes:
             - ./admin:/app
+            - ./admin/docker/nginx/ssl:/etc/nginx/ssl
         depends_on:
             - admin-php-fpm
         ports:
-            - "7777:80"
+            - "7777:443"
     admin-php-fpm:
         build:
             context: ./
@@ -19,6 +20,12 @@ services:
             - ./admin:/app
         depends_on:
             - service-mysql
+    admin-encore:
+        build:
+            context: ./
+            dockerfile: ${PWD}/admin/docker/encore.docker
+        volumes:
+            - ./admin:/app
     ### Api
     api-nginx:
         build:
@@ -26,10 +33,11 @@ services:
             dockerfile: ${PWD}/api/docker/nginx.docker
         volumes:
             - ./api:/app
+            - ./api/docker/nginx/ssl:/etc/nginx/ssl
         depends_on:
             - api-php-fpm
         ports:
-            - "9999:80"
+            - "9999:443"
     api-php-fpm:
         build:
             context: ./

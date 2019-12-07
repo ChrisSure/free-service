@@ -1,6 +1,7 @@
 up: docker-up
 down: docker-down
 build: docker-build
+build-nc: docker-build-no-cache
 
 adut: docker-admin-unit-tests
 aput: docker-api-unit-tests
@@ -14,6 +15,8 @@ docker-down:
 	docker-compose down --remove-orphans
 docker-build:
 	docker-compose build
+docker-build-no-cache:
+	docker-compose build --no-cache
 
 ### Run unit tests
 docker-admin-unit-tests:
