@@ -47,4 +47,5 @@ deploy-production:
 ### curl -X POST -H "Content-Type: application/json" http://localhost:9999/auth/login -d "{\"email\":\"user@gmail.com\",\"password\":\"123\"}"
 ### npm install rxjs@6.0.0 --save
 ### --disable-host-check to package.json start
-### docker-compose run --rm admin-php-fpm php php bin/phpunit
+### docker-compose run --rm admin-php-fpm php php bin/phpunit]
+### docker-compose build --no-cache

@@ -19,6 +19,12 @@ services:
             - ./admin:/app
         depends_on:
             - service-mysql
+    admin-encore:
+        build:
+            context: ./
+            dockerfile: ${PWD}/admin/docker/encore.docker
+        volumes:
+            - ./admin:/app
     ### Api
     api-nginx:
         build:
