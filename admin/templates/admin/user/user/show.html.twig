@@ -5,13 +5,24 @@
 {% block breadcrumbs %}
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('admins') }}">Admins</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('users_index') }}">Users</a></li>
         <li class="breadcrumb-item active">Detail</li>
     </ol>
 {% endblock %}
 
 {% block body %}
     <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-lg-12">
+                <a class="btn btn-primary" href="{{ path('users_edit', {'id': user.id}) }}">Change role</a>
+                {% if(user.status == 'active' or user.status == 'new') %}
+                    <a class="btn btn-primary" href="{{ path('users_block', {'id': user.id}) }}">Block</a>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ path('users_unblock', {'id': user.id}) }}">Unblock</a>
+                {% endif %}
+                {{ include('admin/user/user/_delete_form.html.twig') }}
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-6">
                 <h4>Account</h4>
@@ -19,18 +30,18 @@
                     <tbody>
                     <tr>
                         <th>Id</th>
-                        <td>{{ admin.id }}</td>
+                        <td>{{ user.id }}</td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>{{ admin.email }}</td>
+                        <td>{{ user.email }}</td>
                     </tr>
                     <tr>
                         <th>Role</th>
                         <td>
-                            {% if (admin.roles[0] == 'ROLE_SUPER_ADMIN') %}
+                            {% if (user.roles[0] == 'ROLE_SUPER_ADMIN') %}
                                 <span class="badge badge-secondary">Super admin</span>
-                            {% elseif(admin.roles[0] == 'ROLE_ADMIN') %}
+                            {% elseif(user.roles[0] == 'ROLE_ADMIN') %}
                                 <span class="badge badge-secondary">Admin</span>
                             {% else %}
                                 <span class="badge badge-secondary">Moderator</span>
@@ -40,9 +51,9 @@
                     <tr>
                         <th>Status</th>
                         <td>
-                            {% if (admin.status == 'active') %}
+                            {% if (user.status == 'active') %}
                                 <span class="badge badge-success">Active</span>
-                            {% elseif(admin.status == 'blocked') %}
+                            {% elseif(user.status == 'blocked') %}
                                 <span class="badge badge-danger">Blocked</span>
                             {% else %}
                                 <span class="badge badge-primary">New</span>
@@ -51,44 +62,44 @@
                     </tr>
                     <tr>
                         <th>Created</th>
-                        <td>{{ admin.created_at|date('Y-m-d') }}</td>
+                        <td>{{ user.created_at|date('Y-m-d') }}</td>
                     </tr>
                     <tr>
                         <th>Updated</th>
-                        <td>{{ admin.created_at|date('Y-m-d') }}</td>
+                        <td>{{ user.created_at|date('Y-m-d') }}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <div class="col-lg-6">
-                {%  if(admin.profile != null) %}
+                {%  if(user.profile != null) %}
                     <h4>Profile</h4>
                     <table class="table table-sm">
                         <tbody>
                         <tr>
                             <th>Firstname</th>
-                            <td>{{ admin.profile.firstname }}</td>
+                            <td>{{ user.profile.firstname }}</td>
                         </tr>
                         <tr>
                             <th>Lastname</th>
-                            <td>{{ admin.profile.lastname }}</td>
+                            <td>{{ user.profile.lastname }}</td>
                         </tr>
                         <tr>
                             <th>Surname</th>
-                            <td>{{ admin.profile.surname }}</td>
+                            <td>{{ user.profile.surname }}</td>
                         </tr>
                         <tr>
                             <th>Phone</th>
-                            <td>{{ admin.profile.phone }}</td>
+                            <td>{{ user.profile.phone }}</td>
                         </tr>
                         <tr>
                             <th>About</th>
-                            <td>{{ admin.profile.about }}</td>
+                            <td>{{ user.profile.about }}</td>
                         </tr>
                         <tr>
                             <th>Sex</th>
                             <td>
-                                {% if (admin.profile.sex == 1) %}
+                                {% if (user.profile.sex == 1) %}
                                     Male
                                 {% else %}
                                     Female
@@ -97,11 +108,11 @@
                         </tr>
                         <tr>
                             <th>Birthday</th>
-                            <td>{{ admin.profile.birthday }}</td>
+                            <td>{{ user.profile.birthday }}</td>
                         </tr>
                         <tr>
                             <th>City</th>
-                            <td>{{ admin.profile.city.name }}</td>
+                            <td>{{ user.profile.city.name }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -110,9 +121,9 @@
         </div>
         <div class="row">
             <div class="col-lg-6">
-                {%  if(admin.social|length > 0) %}
+                {%  if(user.social|length > 0) %}
                     <h4 class="mt-4">Social networks</h4>
-                    {%  for social in admin.social %}
+                    {%  for social in user.social %}
                         <table class="table">
                             <tbody>
                             <tr>
