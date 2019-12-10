@@ -1,12 +1,12 @@
 {% extends 'layouts/base.html.twig' %}
 
-{% block title %}Admin detail{% endblock %}
+{% block title %}User detail{% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
         <li class="breadcrumb-item"><a href="{{ path('users_index') }}">Users</a></li>
-        <li class="breadcrumb-item active">Detail</li>
+        <li class="breadcrumb-item active">User detail</li>
     </ol>
 {% endblock %}
 
@@ -14,6 +14,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-lg-12">
+                <h1>User detail</h1>
                 <a class="btn btn-primary" href="{{ path('users_edit', {'id': user.id}) }}">Change role</a>
                 {% if(user.status == 'active' or user.status == 'new') %}
                     <a class="btn btn-primary" href="{{ path('users_block', {'id': user.id}) }}">Block</a>

@@ -2,10 +2,16 @@
 
 {% block title %}Region detail{% endblock %}
 
-{% block body %}
-    <h1>Region</h1>
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('data_region_index') }}">Regions</a></li>
+        <li class="breadcrumb-item active">Region detail</li>
+    </ol>
+{% endblock %}
 
-    <a class="btn btn-primary" href="{{ path('data_region_index') }}">back to list</a>
+{% block body %}
+    <h1>Region detail</h1>
     <a class="btn btn-primary" href="{{ path('data_region_edit', {'id': region.id}) }}">edit</a>
 
     <table class="table mt-3">

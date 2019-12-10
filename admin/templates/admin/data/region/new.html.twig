@@ -2,10 +2,15 @@
 
 {% block title %}Region create{% endblock %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('data_region_index') }}">Regions</a></li>
+        <li class="breadcrumb-item active">Region create</li>
+    </ol>
+{% endblock %}
+
 {% block body %}
-    <h1>Create new Region</h1>
-
+    <h1>Region create</h1>
     {{ include('admin/data/region/_form.html.twig') }}
-
-    <a href="{{ path('data_region_index') }}" class="btn btn-primary mt-2">back to list</a>
 {% endblock %}
