@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Start return dev mode"
+
+git reset --hard
+
+echo "Finish !!!"

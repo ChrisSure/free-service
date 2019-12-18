@@ -1,9 +1,12 @@
-FROM node:12.13-alpine
+FROM node:8.11-alpine
 
-WORKDIR /app
+ENV NODE_ROOT /app
+RUN mkdir -p $NODE_ROOT
+WORKDIR $NODE_ROOT
 
 RUN npm install
+RUN npm install -g @angular/cli@6.1.1
 
-EXPOSE 80
+EXPOSE 443
 
 CMD ["npm", "start"]

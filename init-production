@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "Start initialization production mode"
+
+docker-compose down --remove-orphans
+
+dir=$(pwd)
+
+sudo rm $dir/docker-compose.yml
+sudo mv $dir/docker-compose-production.yml $dir/docker-compose.yml
+sudo rm $dir/client/src/app/globals.ts
+sudo mv $dir/client/src/app/globals-production.ts $dir/client/src/app/globals.ts
+sudo rm $dir/client/src/environments/environment.ts
+sudo mv $dir/client/src/environments/environment.prod.ts $dir/client/src/environments/environment.ts
+
+mkdir -p $dir/api/config/jwt
+openssl genpkey -out $dir/api/config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
+openssl pkey -in $dir/api/config/jwt/private.pem -out $dir/api/config/jwt/public.pem -pubout
+
+docker-compose build
+docker-compose up -d
+
+echo "Finish !!!"
