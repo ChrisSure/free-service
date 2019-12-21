@@ -35,20 +35,15 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * Return list of admins with filtration and sortable
+     * Return list of users with filtration and sortable
      * @param string $sort
      * @param array $filter|null
      * @return mixed
      */
-    public function findAllAdmin($sort, array $filter = null): array
+    public function getAll($sort, array $filter = null): array
     {
         $sort = ($sort == 'asc') ? 'ASC' : 'DESC';
-        $db = $this->createQueryBuilder('u')
-            ->where('u.roles LIKE :roleModer')->orWhere('u.roles LIKE :roleAdmin')->orWhere('u.roles LIKE :roleSAdmin')
-            ->setParameter('roleModer', '%"'.User::$ROLE_MODERATOR.'"%')
-            ->setParameter('roleAdmin', '%"'.User::$ROLE_ADMIN.'"%')
-            ->setParameter('roleSAdmin', '%"'.User::$ROLE_SUPER_ADMIN.'"%')
-            ->orderBy('u.created_at', $sort);
+        $db = $this->createQueryBuilder('u')->orderBy('u.created_at', $sort);
 
         if ($filter != null) {
             if (array_key_exists('email', $filter) && $filter['email'] != "") {
@@ -63,6 +58,31 @@ class UserRepository extends ServiceEntityRepository
         }
 
         return $db->getQuery()->getResult();
+    }
+
+    /**
+     * Save user
+     * @param User $user
+     * @return void
+     */
+    public function save(User $user): void
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+    }
+
+    /**
+     * Remove user
+     * @param User $user
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove(User $user)
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
     }
 
 }

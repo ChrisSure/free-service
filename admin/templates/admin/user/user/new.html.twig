@@ -1,0 +1,16 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}User create{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('users_index') }}">Users</a></li>
+        <li class="breadcrumb-item active">User create</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <h1>User create</h1>
+    {{ include('admin/user/user/_form.html.twig') }}
+{% endblock %}

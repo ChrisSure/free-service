@@ -1,11 +1,10 @@
 #!/bin/bash
 
-echo "Startinitialization server"
+echo "Start initialization server"
 
 
 sudo apt-get update
 sudo apt-get install curl
-curl --version
 echo "Curl is ready"
 
 
@@ -17,16 +16,13 @@ sudo apt update
 sudo apt -y install docker-ce docker-ce-cli containerd.io
 sudo usermod -aG docker $USER
 newgrp docker
-version_d = docker version
-echo "Docker is ready, version $version_d"
+echo "Docker is ready"
 
 
 sudo apt -y update
 sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-version_dc = docker-compose --version
-echo "Docker compose is ready, version $version_dc"
-
+echo "Docker compose is ready"
 
 
 echo "Finish !!!"

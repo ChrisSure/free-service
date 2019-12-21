@@ -83,9 +83,10 @@ class User implements UserInterface
      * List of roles
      * @return array
      */
-    public static function rolesAdminList(): array
+    public static function rolesList(): array
     {
         return [
+            'User' => self::$ROLE_USER,
             'Moderator' => self::$ROLE_MODERATOR,
             'Admin' => self::$ROLE_ADMIN,
             'Super admin' => self::$ROLE_SUPER_ADMIN

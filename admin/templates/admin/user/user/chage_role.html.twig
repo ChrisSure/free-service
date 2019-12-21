@@ -1,0 +1,17 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Change role{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('users_index') }}">Users</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('users_detail', {id: user.id}) }}">Detail</a></li>
+        <li class="breadcrumb-item active">Change role</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <h1>Change role</h1>
+    {{ include('admin/data/region/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

@@ -5,30 +5,31 @@
 {% block breadcrumbs %}
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
-        <li class="breadcrumb-item active">Admins</li>
+        <li class="breadcrumb-item active">Users</li>
     </ol>
 {% endblock %}
 
 {% block body %}
-    <a href="#" class="btn btn-success mb-4">Create new</a>
+    <h1>Users</h1>
+    <a href="{{ path('users_new') }}" class="btn btn-success mb-4">Create new</a>
 
-    <div class="card mb-4">
+    <div class="card lg-4">
         <div class="card-body">
             {{ form_start(form) }}
             <div class="row">
-                <div class="col-md-2">{{ form_widget(form.email) }}</div>
-                <div class="col-md-2">{{ form_widget(form.status) }}</div>
-                <div class="col-md-2">{{ form_widget(form.role) }}</div>
-                <div class="col-md-2">
+                <div class="col-lg-2 filter-row">{{ form_widget(form.email) }}</div>
+                <div class="col-lg-2 filter-row">{{ form_widget(form.status) }}</div>
+                <div class="col-lg-2 filter-row">{{ form_widget(form.role) }}</div>
+                <div class="col-lg-2">
                     <button type="submit" class="btn btn-primary">Filter</button>
-                    <a href="{{ path('admins') }}" class="btn btn-outline-secondary">Reset</a>
+                    <a href="{{ path('users_index') }}" class="btn btn-outline-secondary">Reset</a>
                 </div>
             </div>
             {{ form_end(form) }}
         </div>
     </div>
 
-    {% if admins is empty %}
+    {% if users is empty %}
         Empty
     {% else %}
     <table class="table">
@@ -38,40 +39,42 @@
             <th scope="col">Email</th>
             <th scope="col">Role</th>
             <th scope="col">Status</th>
-            <th scope="col">{{ knp_pagination_sortable(admins, 'Created', 'created_at') }}</th>
+            <th scope="col">{{ knp_pagination_sortable(users, 'Created', 'created_at') }}</th>
         </tr>
         </thead>
         <tbody>
-        {% for admin in admins %}
+        {% for user in users %}
         <tr>
-            <th scope="row">{{ admin.id }}</th>
-            <td><a href="{{ path('admins_detail', {id: admin.id}) }}" class="show_link">{{ admin.email }}</a></td>
+            <th scope="row">{{ user.id }}</th>
+            <td><a href="{{ path('users_detail', {id: user.id}) }}" class="show_link">{{ user.email }}</a></td>
             <td>
-                {% if (admin.roles[0] == 'ROLE_SUPER_ADMIN') %}
+                {% if (user.roles[0] == 'ROLE_SUPER_ADMIN') %}
                     <span class="badge badge-secondary">Super admin</span>
-                {% elseif(admin.roles[0] == 'ROLE_ADMIN') %}
+                {% elseif(user.roles[0] == 'ROLE_ADMIN') %}
                     <span class="badge badge-secondary">Admin</span>
-                {% else %}
+                {% elseif (user.roles[0] == 'ROLE_MODERATOR') %}
                     <span class="badge badge-secondary">Moderator</span>
+                {% else %}
+                    <span class="badge badge-secondary">User</span>
                 {% endif %}
             </td>
             <td>
-                {% if (admin.status == 'active') %}
+                {% if (user.status == 'active') %}
                     <span class="badge badge-success">Active</span>
-                {% elseif(admin.status == 'blocked') %}
+                {% elseif(user.status == 'blocked') %}
                     <span class="badge badge-danger">Blocked</span>
                 {% else %}
                     <span class="badge badge-primary">New</span>
                 {% endif %}
             </td>
-            <td>{{ admin.created_at|date('Y-m-d') }}</td>
+            <td>{{ user.created_at|date('Y-m-d') }}</td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 
     <div class="navigation">
-        {{ knp_pagination_render(admins) }}
+        {{ knp_pagination_render(users) }}
     </div>
     {% endif %}
 

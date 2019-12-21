@@ -5,6 +5,7 @@ namespace App\Repository\Data;
 use App\Entity\Data\Region;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method Region|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +20,41 @@ class RegionRepository extends ServiceEntityRepository
         parent::__construct($registry, Region::class);
     }
 
-    // /**
-    //  * @return Region[] Returns an array of Region objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Get user
+     * @param $id
+     * @return Region
+     */
+    public function get($id): Region
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $region = $this->find($id);
+        if (!$region)
+            throw new NotFoundHttpException('Region doesn\'t exist.');
+        return $region;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Region
+    /**
+     * Save region
+     * @param Region $region
+     * @return void
+     */
+    public function save(Region $region): void
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($region);
+        $entityManager->flush();
     }
-    */
+
+    /**
+     * Remove region
+     * @param Region $region
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove(Region $region)
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->remove($region);
+        $entityManager->flush();
+    }
 }

@@ -2,8 +2,15 @@
 
 {% block title %}Regions{% endblock %}
 
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item active">Regions</li>
+    </ol>
+{% endblock %}
+
 {% block body %}
-    <h1>Region index</h1>
+    <h1>Regions</h1>
     <a href="{{ path('data_region_new') }}" class="btn btn-success mb-4">Create new</a>
     <table class="table">
         <thead>

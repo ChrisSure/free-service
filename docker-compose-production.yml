@@ -7,10 +7,11 @@ services:
             dockerfile: ${PWD}/admin/docker/nginx.docker
         volumes:
             - ./admin:/app
+            - ./admin/docker/nginx/ssl:/etc/nginx/ssl
         depends_on:
             - admin-php-fpm
         ports:
-            - "7777:80"
+            - "7777:443"
     admin-php-fpm:
         build:
             context: ./
@@ -26,10 +27,11 @@ services:
             dockerfile: ${PWD}/api/docker/nginx.docker
         volumes:
             - ./api:/app
+            - ./api/docker/nginx/ssl:/etc/nginx/ssl
         depends_on:
             - api-php-fpm
         ports:
-            - "9999:80"
+            - "9999:443"
     api-php-fpm:
         build:
             context: ./
@@ -37,7 +39,8 @@ services:
         volumes:
             - ./api:/app
         environment:
-            - "CORS_ALLOW_ORIGIN=http://work-profession.space"
+            - "CORS_ALLOW_ORIGIN=https://work-profession.space"
+            - "CLIENT_URL_ADDRESS=https://work-profession.space"
         depends_on:
             - service-mysql
     ### Database
@@ -59,5 +62,6 @@ services:
             dockerfile: ${PWD}/client/docker/production/client.docker
         volumes:
             - ./client:/app
+            - ./client/docker/nginx/ssl:/etc/nginx/ssl
         ports:
-            - '80:4200'
+            - '443:443'

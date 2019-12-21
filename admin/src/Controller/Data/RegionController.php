@@ -5,6 +5,7 @@ namespace App\Controller\Data;
 use App\Entity\Data\Region;
 use App\Form\Data\RegionType;
 use App\Repository\Data\RegionRepository;
+use App\Service\Data\RegionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,13 +16,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RegionController extends AbstractController
 {
+    private $regionService;
+
+    public function __construct(RegionService $regionService)
+    {
+        $this->regionService = $regionService;
+    }
+
     /**
      * @Route("/", name="data_region_index", methods={"GET"})
      */
-    public function index(RegionRepository $regionRepository): Response
+    public function index(): Response
     {
         return $this->render('admin/data/region/index.html.twig', [
-            'regions' => $regionRepository->findAll(),
+            'regions' => $this->regionService->getAll(),
         ]);
     }
 
@@ -35,10 +43,8 @@ class RegionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($region);
-            $entityManager->flush();
-
+            $this->regionService->save($region);
+            $this->addFlash('success', 'Region has created.');
             return $this->redirectToRoute('data_region_index');
         }
 
@@ -51,10 +57,10 @@ class RegionController extends AbstractController
     /**
      * @Route("/{id}", name="data_region_show", methods={"GET"})
      */
-    public function show(Region $region): Response
+    public function show($id): Response
     {
         return $this->render('admin/data/region/show.html.twig', [
-            'region' => $region,
+            'region' => $this->regionService->get($id),
         ]);
     }
 
@@ -67,8 +73,8 @@ class RegionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
+            $this->regionService->save($region);
+            $this->addFlash('success', 'Region has updated.');
             return $this->redirectToRoute('data_region_index');
         }
 
@@ -84,9 +90,8 @@ class RegionController extends AbstractController
     public function delete(Request $request, Region $region): Response
     {
         if ($this->isCsrfTokenValid('delete'.$region->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($region);
-            $entityManager->flush();
+            $this->regionService->remove($region);
+            $this->addFlash('success', 'Region has removed.');
         }
 
         return $this->redirectToRoute('data_region_index');
