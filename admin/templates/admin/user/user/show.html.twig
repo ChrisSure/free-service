@@ -44,8 +44,10 @@
                                 <span class="badge badge-secondary">Super admin</span>
                             {% elseif(user.roles[0] == 'ROLE_ADMIN') %}
                                 <span class="badge badge-secondary">Admin</span>
-                            {% else %}
+                            {% elseif (user.roles[0] == 'ROLE_MODERATOR') %}
                                 <span class="badge badge-secondary">Moderator</span>
+                            {% else %}
+                                <span class="badge badge-secondary">User</span>
                             {% endif %}
                         </td>
                     </tr>

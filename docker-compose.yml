@@ -65,6 +65,5 @@ services:
             dockerfile: ${PWD}/client/docker/client.docker
         volumes:
             - ./client:/app
-            - ./client/docker/nginx/ssl:/etc/nginx/ssl
         ports:
-            - '8080:443'
+            - '4200:4200'

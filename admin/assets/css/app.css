@@ -160,6 +160,12 @@ a.article:hover {
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
+@media (max-width: 991px) {
+    .filter-row {
+        margin-bottom: 10px;
+    }
+}
+
 @media (max-width: 768px) {
     #sidebar {
         margin-left: -250px;

@@ -89,6 +89,13 @@ body {
 }
 /* Main */
 
+/* Footer */
+#sticky-footer {
+  bottom: 0px;
+  position: fixed;
+  width: 100%;
+}
+/* Footer */
 
 
 /*** Layout ***/
@@ -146,6 +153,14 @@ body {
         margin-left: 0px;
     }
     /* Main */
+
+    /* Footer */
+    #sticky-footer {
+      bottom: 0px;
+      position: unset;
+      margin-top: 20px;
+    }
+  /* Footer */
 
     /* Cabinet */
     .cabinet_main {
