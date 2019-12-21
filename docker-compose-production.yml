@@ -59,7 +59,7 @@ services:
     service-client:
         build:
             context: ./
-            dockerfile: ${PWD}/client/docker/production/client.docker
+            dockerfile: ${PWD}/client/docker/client.docker
         volumes:
             - ./client:/app
             - ./client/docker/nginx/ssl:/etc/nginx/ssl
