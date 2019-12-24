@@ -3,6 +3,7 @@
 namespace App\Repository\Data;
 
 use App\Entity\Data\City;
+use App\Entity\Data\Region;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -31,6 +32,27 @@ class CityRepository extends ServiceEntityRepository
         if (!$city)
             throw new NotFoundHttpException('City doesn\'t exist.');
         return $city;
+    }
+
+    /**
+     * Get list cities
+     * @param array|null $filter
+     * @return array
+     */
+    public function getAll(array $filter = null): array
+    {
+        $db = $this->createQueryBuilder('c');
+
+        if ($filter != null) {
+            if (array_key_exists('name', $filter) && $filter['name'] != "") {
+                $db->andWhere('c.name LIKE :name')->setParameter('name', "%".$filter['name']."%");
+            }
+            if (array_key_exists('region', $filter) && $filter['region'] != "") {
+                $db->andWhere('c.region = :region')->setParameter('region', $filter['region']);
+            }
+        }
+
+        return $db->getQuery()->getResult();
     }
 
     /**

@@ -4,8 +4,9 @@ namespace App\Controller\Data;
 
 use App\Entity\Data\City;
 use App\Form\Data\CityType;
-use App\Repository\Data\CityRepository;
+use App\Form\Data\CityFilterType;
 use App\Service\Data\CityService;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,10 +27,20 @@ class CityController extends AbstractController
     /**
      * @Route("/", name="data_city_index", methods={"GET"})
      */
-    public function index(): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
+        $form = $this->createForm(CityFilterType::class);
+        $form->handleRequest($request);
+
+        $cities = $paginator->paginate(
+            $this->cityService->getAll($form->getData()),
+            $request->query->getInt('page', 1),
+            10
+        );
+
         return $this->render('admin/data/city/index.html.twig', [
-            'cities' => $this->cityService->getAll(),
+            'cities' => $cities,
+            'form' => $form->createView()
         ]);
     }
 

@@ -24,11 +24,12 @@ class CityService
 
     /**
      * Get all regions
+     * @param array $filter
      * @return City[]
      */
-    public function getAll(): array
+    public function getAll(array $filter = null): array
     {
-        return $this->cityRepository->findAll();
+        return $this->cityRepository->getAll($filter);
     }
 
     /**
