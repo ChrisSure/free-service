@@ -21,7 +21,7 @@ class RegionRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get user
+     * Get region
      * @param $id
      * @return Region
      */

@@ -1,0 +1,17 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}City edit{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('data_city_index') }}">Cities</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('data_city_show', {id: city.id}) }}">City detail</a></li>
+        <li class="breadcrumb-item active">City edit</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <h1>City edit</h1>
+    {{ include('admin/data/city/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}City create{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('data_city_index') }}">Cities</a></li>
+        <li class="breadcrumb-item active">City create</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <h1>City create</h1>
+    {{ include('admin/data/city/_form.html.twig') }}
+{% endblock %}

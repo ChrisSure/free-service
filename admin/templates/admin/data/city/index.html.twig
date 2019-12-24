@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Cities{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item active">Cities</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <h1>City index</h1>
+    <a href="{{ path('data_city_new') }}" class="btn btn-success mb-4">Create new</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for city in cities %}
+            <tr>
+                <td>{{ city.id }}</td>
+                <td><a href="{{ path('data_city_show', {'id': city.id}) }}" class="show_link">{{ city.name }}</a></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
