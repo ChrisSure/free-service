@@ -1,4 +1,4 @@
-# Work proffession
+# Work profession
 
 ## Stack of technologies:
 
