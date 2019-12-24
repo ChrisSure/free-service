@@ -1,0 +1,33 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}City detail{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('data_city_index') }}">Cities</a></li>
+        <li class="breadcrumb-item active">City detail</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <h1>City detail</h1>
+    <a class="btn btn-primary" href="{{ path('data_city_edit', {'id': city.id}) }}">edit</a>
+    <table class="table mt-3">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ city.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ city.name }}</td>
+            </tr>
+            <tr>
+                <th>Region</th>
+                <td>{{ city.region.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {{ include('admin/data/city/_delete_form.html.twig') }}
+{% endblock %}

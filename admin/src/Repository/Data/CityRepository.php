@@ -3,8 +3,10 @@
 namespace App\Repository\Data;
 
 use App\Entity\Data\City;
+use App\Entity\Data\Region;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method City|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +21,62 @@ class CityRepository extends ServiceEntityRepository
         parent::__construct($registry, City::class);
     }
 
-    // /**
-    //  * @return City[] Returns an array of City objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Get city
+     * @param $id
+     * @return City
+     */
+    public function get($id): City
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $city = $this->find($id);
+        if (!$city)
+            throw new NotFoundHttpException('City doesn\'t exist.');
+        return $city;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?City
+    /**
+     * Get list cities
+     * @param array|null $filter
+     * @return array
+     */
+    public function getAll(array $filter = null): array
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $db = $this->createQueryBuilder('c');
+
+        if ($filter != null) {
+            if (array_key_exists('name', $filter) && $filter['name'] != "") {
+                $db->andWhere('c.name LIKE :name')->setParameter('name', "%".$filter['name']."%");
+            }
+            if (array_key_exists('region', $filter) && $filter['region'] != "") {
+                $db->andWhere('c.region = :region')->setParameter('region', $filter['region']);
+            }
+        }
+
+        return $db->getQuery()->getResult();
     }
-    */
+
+    /**
+     * Save city
+     * @param City $city
+     * @return void
+     */
+    public function save(City $city): void
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($city);
+        $entityManager->flush();
+    }
+
+    /**
+     * Remove region
+     * @param City $city
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove(City $city)
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->remove($city);
+        $entityManager->flush();
+    }
 }

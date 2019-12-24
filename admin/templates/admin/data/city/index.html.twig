@@ -1,0 +1,68 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block title %}Cities{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item active">Cities</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+    <h1>City index</h1>
+    <a href="{{ path('data_city_new') }}" class="btn btn-success mb-4">Create new</a>
+
+    <div class="card lg-4">
+        <div class="card-body">
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col-lg-2 filter-row">{{ form_widget(form.name) }}</div>
+                <div class="col-lg-2 filter-row">{{ form_widget(form.region) }}</div>
+                <div class="col-lg-2">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a href="{{ path('data_city_index') }}" class="btn btn-outline-secondary">Reset</a>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    {% if cities is empty %}
+    Empty
+    {% else %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Region</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for city in cities %}
+            <tr>
+                <td>{{ city.id }}</td>
+                <td><a href="{{ path('data_city_show', {'id': city.id}) }}" class="show_link">{{ city.name }}</a></td>
+                <td>
+                    {% if city.region is not null %}
+                        {{city.region.name}}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(cities) }}
+    </div>
+    {% endif %}
+
+{% endblock %}

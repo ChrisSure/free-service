@@ -4,8 +4,8 @@ namespace App\Controller\Data;
 
 use App\Entity\Data\Region;
 use App\Form\Data\RegionType;
-use App\Repository\Data\RegionRepository;
 use App\Service\Data\RegionService;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,10 +26,16 @@ class RegionController extends AbstractController
     /**
      * @Route("/", name="data_region_index", methods={"GET"})
      */
-    public function index(): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
+        $regions = $paginator->paginate(
+            $this->regionService->getAll(),
+            $request->query->getInt('page', 1),
+            10
+        );
+
         return $this->render('admin/data/region/index.html.twig', [
-            'regions' => $this->regionService->getAll(),
+            'regions' => $regions,
         ]);
     }
 
