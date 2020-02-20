@@ -7,18 +7,20 @@ import { HeaderComponent } from "./blocks/header/header.component";
 import { ConfirmRegisterComponent } from "./auth/confirm-register/confirm-register.component";
 import { ForgetPasswordComponent } from "./auth/forget-password/forget-password.component";
 import { NewPasswordComponent } from "./auth/new-password/new-password.component";
-import { FooterComponent } from "./blocks/footer/footer.component";
 import { LeftMainComponent } from "./blocks/left-main/left-main.component";
+import { AboutComponent } from "./pages/about.component";
+import { ContactsComponent } from "./pages/contacts.component";
 
 @NgModule({
     declarations: [
         HomeComponent,
         HeaderComponent,
         LeftMainComponent,
-        FooterComponent,
         ConfirmRegisterComponent,
         ForgetPasswordComponent,
-        NewPasswordComponent
+        NewPasswordComponent,
+        AboutComponent,
+        ContactsComponent
     ],
     imports: [
         CommonModule,
@@ -29,8 +31,7 @@ import { LeftMainComponent } from "./blocks/left-main/left-main.component";
     exports:
     [
         HeaderComponent,
-        LeftMainComponent,
-        FooterComponent
+        LeftMainComponent
     ],
     providers: [],
     bootstrap: []
